@@ -10,7 +10,24 @@ so.StartupScene = cc.Scene.extend({
         so.enableTooltip(mapLayer);
         this._mapLayer = mapLayer;
 
+        this.initControl();
         this.initMap();
+    },
+    initControl: function () {
+        var _parent = this;
+        var zoomInBtn = new cc.MenuItemImage(
+            so.res.img_zoom_in, so.res.img_zoom_in_sel, function () { _parent.zoomIn(); });
+        zoomInBtn.setAnchorPoint(cc.p(0, 1));
+        zoomInBtn.setScale(0.5);
+        zoomInBtn.setPosition(cc.p(120, so.size.height - 6));
+        var zoomOutBtn = new cc.MenuItemImage(
+            so.res.img_zoom_out, so.res.img_zoom_out_sel, function () { _parent.zoomOut(); });
+        zoomOutBtn.setAnchorPoint(cc.p(0, 1));
+        zoomOutBtn.setScale(0.5);
+        zoomOutBtn.setPosition(cc.p(162, so.size.height - 6));
+        var menu = new cc.Menu(zoomInBtn, zoomOutBtn);
+        menu.setPosition(cc.p(0, 0));
+        this.addChild(menu);
     },
     initMap: function () {
         var player = new so.Circle(10, cc.color(128, 192, 255));
@@ -25,5 +42,15 @@ so.StartupScene = cc.Scene.extend({
             var tt = new so.Tooltip(['Solar #' + i, cc.color(255, 64, 0), 'Ordinary', cc.color.WHITE]);
             so.putTooltip(this._mapLayer, s.getBLCorner(), s.getCircleSize(), tt);
         }
+    },
+
+    _mapScale: 1,
+    zoomIn: function () {
+        this._mapScale *= 2;
+        this._mapLayer.setVisibleScale(this._mapScale);
+    },
+    zoomOut: function () {
+        this._mapScale /= 2;
+        this._mapLayer.setVisibleScale(this._mapScale);
     }
 });

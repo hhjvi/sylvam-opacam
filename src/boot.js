@@ -1,6 +1,12 @@
 so.res = {
+    img_zoom_in: 'res/zoom-in.png',
+    img_zoom_in_sel: 'res/zoom-in-sel.png',
+    img_zoom_out: 'res/zoom-out.png',
+    img_zoom_out_sel: 'res/zoom-out-sel.png'
 };
 so.res_preload = [
+    so.res.img_zoom_in, so.res.img_zoom_in_sel,
+    so.res.img_zoom_in, so.res.img_zoom_out_sel
 ];
 so.size = cc.size(0, 0);
 so.centre = cc.p(0, 0);
