@@ -19,6 +19,7 @@ so.UpDown = cc.Node.extend({
         var menu = new cc.Menu(upBtn, downBtn);
         menu.setPosition(cc.p(0, 0));
         this.addChild(menu, 0);
+        menu.setContentSize(updownSize);
         this.setContentSize(updownSize);
     },
     up: function () {

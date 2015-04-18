@@ -29,7 +29,7 @@ so.DevCtrlPanel = cc.Layer.extend({
         var ud = new so.UpDown(
             function (val) { console.log(val); }, 0, 99);
         ud.setAnchorPoint(cc.p(1, 0));
-        ud.setNormalizedPosition(cc.p(0.3, 0.3));
+        ud.setNormalizedPosition(cc.p(1, 0));
         panel.addChild(ud);
     }
 });

@@ -91,14 +91,14 @@ so.StartupScene = cc.Scene.extend({
         //devpnl.setPosition(cc.p(0, -dcpFadeInOffset));
         devpnl.setPosition(cc.p(0, 0));
         devpnl.setVisible(false);
-        this.addChild(devpnl);
+        this.addChild(devpnl, 1);
         this._devPanel = devpnl;
         // The development display bar
         var devbar = new so.DevBar(devpnl.show, devpnl);
         devbar.setCapacity(so.balanceBase);
         devbar.setAnchorPoint(cc.p(0, 0));
         devbar.setPosition(cc.p(66, 2));
-        this.addChild(devbar);
+        this.addChild(devbar, 0);
         this._devBar = devbar;
         window.d = devbar;
     },
