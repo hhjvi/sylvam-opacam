@@ -7,6 +7,7 @@ so.StartupScene = cc.Scene.extend({
     _timeDisp: null,
     _devBar: null,
     _devPanel: null,
+    _resDisp: null, _stbltDisp: null,
     onEnter: function () {
         this._super();
         var size = cc.director.getVisibleSize();
@@ -19,6 +20,7 @@ so.StartupScene = cc.Scene.extend({
 
         this.initControl();
         this.initMap();
+        this.initGameplay();
         
         // Let's rock!!
         cc.director.getScheduler().scheduleCallbackForTarget(this, this.step, 0.5);
@@ -97,7 +99,18 @@ so.StartupScene = cc.Scene.extend({
         devbar.setPosition(cc.p(66, 2));
         this.addChild(devbar, 0);
         this._devBar = devbar;
-        window.d = devbar;
+        // The resource and stability display
+        var rd = new cc.LabelTTF('Res. ' + so.resourceSeed.toString(), 'Arial', 20);
+        rd.setAnchorPoint(cc.p(1, 0));
+        rd.setPosition(cc.p(so.size.width - 4, 24));
+        this.addChild(rd);
+        this._resDisp = rd;
+        var sd = new cc.LabelTTF('Stab. 100.0', 'Arial', 20);
+        sd.setAnchorPoint(cc.p(1, 1));
+        sd.setPosition(cc.p(so.size.width - 4, 24));
+        sd.setColor(cc.color.GREEN);
+        this.addChild(sd);
+        this._stbltDisp = sd;
     },
     _player: null,
     _lcone: null,
@@ -163,20 +176,33 @@ so.StartupScene = cc.Scene.extend({
         else
             this._timeflowDisp.setString('x' + timeflowRates[this._timeflowIdx].toString());
     },
+    _devPace: 0,
     adjustDevPace: function (dev) {
         var c = [];
+        this._devPace = 0;
         for (var i in dcpItems) {
             c.push({num: dev[dcpItems[i][0]], colour: dcpItems[i][2]});
+            this._devPace += dev[dcpItems[i][0]];
         }
         this._devBar.setContents(c);
     },
 
     _monCnt: 0,
     _lconeRadius: 0,
+    _resource: so.resourceSeed,
+    _devLevels: {}, _devLevelsTot: 0,
+    _stability: 100,
+    // Initializes player-related data.
+    initGameplay: function () {
+        for (var i in dcpItems) this._devLevels[i] = 0;
+    },
     // One tick is 2 months.
     tick: function () {
         this._monCnt++;
         this._lconeRadius += 1 / 6;
+        this._resource -= (10 + 5 * this._devPace);
+        this._stability += (so.balanceBase + this._devLevelsTot - this._devPace) * 0.1;
+        if (this._stability > 100) this._stability = 100;
     },
     refreshDisp: function () {
         this._lcone.setScale(this._lconeRadius * this._mapScale * so.ly2pix);
@@ -187,6 +213,13 @@ so.StartupScene = cc.Scene.extend({
             this._solarSys[i].node.setVisible(
                 this._solarSys[i].distSq <= this._lconeRadius * this._lconeRadius);
         }
+        this._resDisp.setString('Res. ' + this._resource.toString());
+        var ss = (this._stability + 0.00625).toString();
+        this._stbltDisp.setString('Stab. ' + ss.substr(0, ss.lastIndexOf('.') + 2));
+        if (this._stability >= 80) this._stbltDisp.setColor(cc.color.GREEN);
+        else if (this._stability >= 60) this._stbltDisp.setColor(cc.color.YELLOW);
+        else if (this._stability >= 40) this._stbltDisp.setColor(cc.color(255, 128, 0));
+        else this._stbltDisp.setColor(cc.color.RED);
     },
     // Called every half second.
     step: function () {
