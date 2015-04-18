@@ -11,6 +11,9 @@ so.res_preload = [
 so.size = cc.size(0, 0);
 so.centre = cc.p(0, 0);
 
+// Game-related constants
+so.ly2pix = 100;    // By default, 100 pixels = 1 light year
+
 cc.game.onStart = function () {
     cc.view.adjustViewPort(true);
     cc.view.setDesignResolutionSize(640, 320, cc.ResolutionPolicy.SHOW_ALL);

@@ -1,5 +1,6 @@
 so.StartupScene = cc.Scene.extend({
     _mapLayer: null,
+    _scale: null,
     onEnter: function () {
         this._super();
         var size = cc.director.getVisibleSize();
@@ -15,16 +16,24 @@ so.StartupScene = cc.Scene.extend({
     },
     initControl: function () {
         var _parent = this;
+        // The scale
+        var scale = new so.Scale();
+        scale.dispScale(so.ly2pix);
+        scale.setAnchorPoint(cc.p(0, 1));
+        scale.setNormalizedPosition(cc.p(0, 1));
+        this.addChild(scale);
+        this._scale = scale;
+        // The buttons for zooming
         var zoomInBtn = new cc.MenuItemImage(
             so.res.img_zoom_in, so.res.img_zoom_in_sel, function () { _parent.zoomIn(); });
         zoomInBtn.setAnchorPoint(cc.p(0, 1));
         zoomInBtn.setScale(0.5);
-        zoomInBtn.setPosition(cc.p(120, so.size.height - 6));
+        zoomInBtn.setPosition(cc.p(140, so.size.height - 6));
         var zoomOutBtn = new cc.MenuItemImage(
             so.res.img_zoom_out, so.res.img_zoom_out_sel, function () { _parent.zoomOut(); });
         zoomOutBtn.setAnchorPoint(cc.p(0, 1));
         zoomOutBtn.setScale(0.5);
-        zoomOutBtn.setPosition(cc.p(162, so.size.height - 6));
+        zoomOutBtn.setPosition(cc.p(182, so.size.height - 6));
         var menu = new cc.Menu(zoomInBtn, zoomOutBtn);
         menu.setPosition(cc.p(0, 0));
         this.addChild(menu);
@@ -46,11 +55,13 @@ so.StartupScene = cc.Scene.extend({
 
     _mapScale: 1,
     zoomIn: function () {
-        this._mapScale *= 2;
+        this._mapScale *= Math.sqrt(2);
         this._mapLayer.setVisibleScale(this._mapScale);
+        this._scale.dispScale(this._mapScale * so.ly2pix);
     },
     zoomOut: function () {
-        this._mapScale /= 2;
+        this._mapScale /= Math.sqrt(2);
         this._mapLayer.setVisibleScale(this._mapScale);
+        this._scale.dispScale(this._mapScale * so.ly2pix);
     }
 });
