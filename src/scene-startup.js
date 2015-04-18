@@ -176,13 +176,16 @@ so.StartupScene = cc.Scene.extend({
         else
             this._timeflowDisp.setString('x' + timeflowRates[this._timeflowIdx].toString());
     },
-    _devPace: 0,
+    _devPace: {},
+    _devPaceTot: 0,
     adjustDevPace: function (dev) {
         var c = [];
-        this._devPace = 0;
+        this._devPaceTot = 0;
         for (var i in dcpItems) {
-            c.push({num: dev[dcpItems[i][0]], colour: dcpItems[i][2]});
-            this._devPace += dev[dcpItems[i][0]];
+            var n = dev[dcpItems[i][0]];
+            c.push({num: n, colour: dcpItems[i][2]});
+            this._devPaceTot += n;
+            this._devPace[i] = n;
         }
         this._devBar.setContents(c);
     },
@@ -190,19 +193,41 @@ so.StartupScene = cc.Scene.extend({
     _monCnt: 0,
     _lconeRadius: 0,
     _resource: so.resourceSeed,
+    _devPoints: {},
     _devLevels: {}, _devLevelsTot: 0,
     _stability: 100,
     // Initializes player-related data.
     initGameplay: function () {
-        for (var i in dcpItems) this._devLevels[i] = 0;
+        for (var i in dcpItems)
+            this._devPace[i] = this._devLevels[i] = this._devPoints[i] = 0;
+    },
+    levelRequirement: function (i, lv) {
+        // It's easier to upgrade energy levels.
+        if (i === 0) return (50 * lv + 450) * lv;
+        else return (250 * lv + 750) * lv;
     },
     // One tick is 2 months.
     tick: function () {
         this._monCnt++;
         this._lconeRadius += 1 / 6;
-        this._resource -= (10 + 5 * this._devPace);
-        this._stability += (so.balanceBase + this._devLevelsTot - this._devPace) * 0.1;
+        this._resource -= (10 + 5 * this._devPaceTot);
+        this._stability += (so.balanceBase + this._devLevelsTot - this._devPaceTot) * 0.1;
         if (this._stability > 100) this._stability = 100;
+        // Let's develop!
+        for (var i in dcpItems) {
+            this._devPoints[i] += this._devPace[i] * 5;
+            var lastReq = this.levelRequirement(i, this._devLevels[i]),
+                nextReq = this.levelRequirement(i, this._devLevels[i] + 1);
+            if (this._devPoints[i] >= nextReq) {
+                this._devLevels[i]++; this._devLevelsTot++;
+                this._devBar.setCapacity(so.balanceBase + this._devLevelsTot);
+                // Update for displaying in the develop panel
+                lastReq = nextReq;
+                nextReq = this.levelRequirement(i, this._devLevels[i] + 1);
+            }
+            this._devPanel.updateLevelLabel(i, this._devLevels[i],
+                (this._devPoints[i] - lastReq) / (nextReq - lastReq));
+        }
     },
     refreshDisp: function () {
         this._lcone.setScale(this._lconeRadius * this._mapScale * so.ly2pix);

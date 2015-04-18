@@ -6,10 +6,12 @@ var dcpItems = [
     ['bassci', 'Basic Science', cc.color.BLUE]
 ];
 var dcpAnimationDur = 0.3;
+//var dcpLevelLabelTagStart = 0xcafe;
 so.DevCtrlPanel = cc.Layer.extend({
     _callback: null,
     _target: null,
     _values: {},
+    _levelLabels: [],
     ctor: function (callback, target) {
         this._super();
         this._callback = callback; this._target = target;
@@ -70,10 +72,16 @@ so.DevCtrlPanel = cc.Layer.extend({
             levelLbl.setNormalizedPosition(cc.p(0.538, 0.68 - 0.27 * i));
             levelLbl.setColor(dcpItems[i][2]);
             panel.addChild(levelLbl);
+            this._levelLabels[i] = levelLbl;
             var ud = new so.UpDown(modifier(dcpItems[i][0]), this, 0, 15, 0, dcpItems[i][2]);
             ud.setAnchorPoint(cc.p(0, 0.5));
             ud.setNormalizedPosition(cc.p(0.618, 0.68 - 0.27 * i));
             panel.addChild(ud);
         }
+    },
+    updateLevelLabel: function (i, lv, progress) {
+        this._levelLabels[i].setString(
+            'Level ' + lv.toString() + '\n' +
+            Math.round(progress * 100).toString() + '%');
     }
 });
