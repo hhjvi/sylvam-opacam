@@ -42,15 +42,20 @@ so.enableTooltip = function (host) {
             for (var i in t._so_tooltips) {
                 var pp = t._so_tooltips[i];
                 //console.log(pp);
-                pp.tooltip.setVisible(p.x >= pp.pos1.x && p.x <= pp.pos2.x
-                    && p.y >= pp.pos1.y && p.y <= pp.pos2.y);
+                // Stop being affected by the movement of the nodes
+                var diffNodePos = cc.pSub(pp.node.getPosition(), pp.initialNodePos);
+                pp.tooltip.setVisible(
+                    p.x >= pp.pos1.x + diffNodePos.x && p.x <= pp.pos2.x + diffNodePos.x
+                    && p.y >= pp.pos1.y + diffNodePos.y && p.y <= pp.pos2.y + diffNodePos.y);
             }
         }
     }, host);
 };
 
-so.putTooltip = function (host, pos, size, tooltip) {
+so.putTooltip = function (host, node, pos, size, tooltip) {
     host._so_tooltips.push({
+        node: node,
+        initialNodePos: node.getPosition(),
         pos1: pos,
         pos2: cc.p(pos.x + size.width, pos.y + size.height),
         tooltip: tooltip
