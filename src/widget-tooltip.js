@@ -45,7 +45,8 @@ so.enableTooltip = function (host) {
                 // Stop being affected by the movement of the nodes
                 var diffNodePos = cc.pSub(pp.node.getPosition(), pp.initialNodePos);
                 pp.tooltip.setVisible(
-                    p.x >= pp.pos1.x + diffNodePos.x && p.x <= pp.pos2.x + diffNodePos.x
+                    pp.node.isVisible()
+                    && p.x >= pp.pos1.x + diffNodePos.x && p.x <= pp.pos2.x + diffNodePos.x
                     && p.y >= pp.pos1.y + diffNodePos.y && p.y <= pp.pos2.y + diffNodePos.y);
             }
         }

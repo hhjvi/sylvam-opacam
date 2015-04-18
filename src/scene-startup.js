@@ -83,10 +83,20 @@ so.StartupScene = cc.Scene.extend({
         for (var i = 0; i < 10; i++) {
             var s = new so.Circle(i, cc.color(255, 64, 0));
             s.setPosition(cc.p(40 * i - 140, 15 * i - 88));
+            s.setVisible(false);
             this._mapLayer.addMapPoint(s);
             var tt = new so.Tooltip(['Solar #' + i, cc.color(255, 64, 0), 'Ordinary', cc.color.WHITE]);
             so.putTooltip(this._mapLayer, s, s.getBLCorner(), s.getCircleSize(), tt);
+            this._solarSys.push({
+                x: (40 * i - 140) / so.ly2pix, y: (15 * i - 88) / so.ly2pix, node: s
+            });
         }
+        for (var i in this._solarSys) {
+            this._solarSys[i].distSq =
+                this._solarSys[i].x * this._solarSys[i].x +
+                this._solarSys[i].y * this._solarSys[i].y;
+        }
+        console.log(this._solarSys);
     },
 
     _mapScale: 1,
@@ -113,6 +123,10 @@ so.StartupScene = cc.Scene.extend({
         var y = (this._monCnt - this._monCnt % 12) / 12, m = this._monCnt % 12;
         this._timeDisp.setString(
             y.toString() + (y === 1 ? ' yr ' : ' yrs ') + m.toString() + ' mon');
+        for (var i in this._solarSys) {
+            this._solarSys[i].node.setVisible(
+                this._solarSys[i].distSq <= this._lconeRadius * this._lconeRadius);
+        }
     },
     // Called every half second.
     step: function () {
