@@ -16,6 +16,24 @@ so.StartupScene = cc.Scene.extend({
     },
     initControl: function () {
         var _parent = this;
+        // The drag & drop mover
+        cc.eventManager.addListener({
+            event: cc.EventListener.MOUSE,
+            _dragging: false,
+            _moveTarget: _parent._mapLayer,
+            onMouseDown: function (e) {
+                this._dragging = true;
+            },
+            onMouseMove: function (e) {
+                if (!this._dragging) return;
+                this._moveTarget.setVisibleCentre(
+                    this._moveTarget.getVisibleCentreX() - e.getDeltaX(),
+                    this._moveTarget.getVisibleCentreY() - e.getDeltaY());
+            },
+            onMouseUp: function (e) {
+                this._dragging = false;
+            }
+        }, this._mapLayer);
         // The scale
         var scale = new so.Scale();
         scale.dispScale(so.ly2pix);

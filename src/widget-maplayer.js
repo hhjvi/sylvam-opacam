@@ -9,6 +9,11 @@ so.MapLayer = cc.Layer.extend({
         this._mapChildren.push(child);
         cc.Layer.prototype.addChild.apply(this, arguments);
     },
+    getVisibleCentre: function () {
+        return cc.p(this._visCentX, this._visCentY);
+    },
+    getVisibleCentreX: function () { return this._visCentX; },
+    getVisibleCentreY: function () { return this._visCentY; },
     setVisibleCentre: function (x, y) {
         this.setPosition(cc.p(-x + so.size.width * 0.5, -y + so.size.height * 0.5));
         this._visCentX = x; this._visCentY = y;
