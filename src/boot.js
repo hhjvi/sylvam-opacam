@@ -3,12 +3,18 @@ so.res = {
     img_zoom_in: 'res/zoom-in.png',
     img_zoom_in_sel: 'res/zoom-in-sel.png',
     img_zoom_out: 'res/zoom-out.png',
-    img_zoom_out_sel: 'res/zoom-out-sel.png'
+    img_zoom_out_sel: 'res/zoom-out-sel.png',
+    up_btn: 'res/up-btn.png',
+    up_btn_sel: 'res/up-btn-sel.png',
+    down_btn: 'res/down-btn.png',
+    down_btn_sel: 'res/down-btn-sel.png'
 };
 so.res_preload = [
     so.res.white_px,
     so.res.img_zoom_in, so.res.img_zoom_in_sel,
-    so.res.img_zoom_in, so.res.img_zoom_out_sel
+    so.res.img_zoom_in, so.res.img_zoom_out_sel,
+    so.res.up_btn, so.res.up_btn_sel,
+    so.res.down_btn, so.res.down_btn_sel
 ];
 so.size = cc.size(0, 0);
 so.centre = cc.p(0, 0);
