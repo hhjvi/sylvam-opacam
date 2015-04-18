@@ -1,6 +1,7 @@
 so.StartupScene = cc.Scene.extend({
     _mapLayer: null,
     _scale: null,
+    _timeDisp: null,
     onEnter: function () {
         this._super();
         var size = cc.director.getVisibleSize();
@@ -13,6 +14,9 @@ so.StartupScene = cc.Scene.extend({
 
         this.initControl();
         this.initMap();
+        
+        // Let's rock!!
+        cc.director.getScheduler().scheduleCallbackForTarget(this, this.step, 0.5);
     },
     initControl: function () {
         var _parent = this;
@@ -55,16 +59,27 @@ so.StartupScene = cc.Scene.extend({
         var menu = new cc.Menu(zoomInBtn, zoomOutBtn);
         menu.setPosition(cc.p(0, 0));
         this.addChild(menu);
+        // The time display
+        var timeDisp = new cc.LabelTTF('0 mon', 'Arial', 20);
+        timeDisp.setAnchorPoint(cc.p(0, 0));
+        timeDisp.setPosition(cc.p(66, 24));
+        this.addChild(timeDisp);
+        this._timeDisp = timeDisp;
     },
+    _player: null,
+    _lcone: null,
+    _solarSys: [],
     initMap: function () {
         var player = new so.Circle(10, cc.color(128, 192, 255));
         player.setPosition(cc.p(0, 0));
         this._mapLayer.addMapPoint(player, 10);
         var playerTooltip = new so.Tooltip(['Cygnia', cc.color(128, 192, 255), 'Player', cc.color.BLACK]);
         so.putTooltip(this._mapLayer, player, player.getBLCorner(), player.getCircleSize(), playerTooltip);
-        var lcone = new so.Circle(60, cc.color(0, 0, 48));
+        this._player = player;
+        var lcone = new so.Circle(1, cc.color(0, 0, 48));
         lcone.setPosition(cc.p(0, 0));
         this._mapLayer.addMapRegion(lcone, 0);
+        this._lcone = lcone;
         for (var i = 0; i < 10; i++) {
             var s = new so.Circle(i, cc.color(255, 64, 0));
             s.setPosition(cc.p(40 * i - 140, 15 * i - 88));
@@ -84,5 +99,24 @@ so.StartupScene = cc.Scene.extend({
         this._mapScale /= Math.sqrt(2);
         this._mapLayer.setVisibleScale(this._mapScale);
         this._scale.dispScale(this._mapScale * so.ly2pix);
+    },
+
+    _monCnt: 0,
+    _lconeRadius: 0,
+    // One tick is 2 months.
+    tick: function () {
+        this._monCnt++;
+        this._lconeRadius += 1 / 6;
+    },
+    refreshDisp: function () {
+        this._lcone.setScale(this._lconeRadius * this._mapScale * so.ly2pix);
+        var y = (this._monCnt - this._monCnt % 12) / 12, m = this._monCnt % 12;
+        this._timeDisp.setString(
+            y.toString() + (y === 1 ? ' yr ' : ' yrs ') + m.toString() + ' mon');
+    },
+    // Called every half second.
+    step: function () {
+        this.tick();
+        this.refreshDisp();
     }
 });
