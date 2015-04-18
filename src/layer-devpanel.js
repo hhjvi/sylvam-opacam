@@ -1,9 +1,11 @@
 var dcpOffset = 80;
+var dcpFadeInOffset = 20;
 var dcpItems = [
     ['energy', 'Energy', cc.color.YELLOW],
     ['fire', 'Fire', cc.color.RED],
     ['bassci', 'Basic Science', cc.color.BLUE]
 ];
+var dcpAnimationDur = 0.3;
 so.DevCtrlPanel = cc.Layer.extend({
     _callback: null,
     _target: null,
@@ -11,6 +13,7 @@ so.DevCtrlPanel = cc.Layer.extend({
     ctor: function (callback, target) {
         this._super();
         this._callback = callback; this._target = target;
+        this.setCascadeOpacityEnabled(true);
         // The menu to hide the panel
         var menuHide = new cc.MenuItemSprite(
             new so.PureSprite(so.size.width, so.size.height),
@@ -24,14 +27,23 @@ so.DevCtrlPanel = cc.Layer.extend({
         var panel = new cc.LayerColor(cc.color(255, 255, 255, 192),
             so.size.width, so.size.height - dcpOffset);
         panel.setPosition(cc.p(0, 0));
+        panel.setCascadeOpacityEnabled(true);
         this.addChild(panel);
         this.initPanel(panel);
     },
     show: function () {
-        this.setVisible(true);
+        this.runAction(cc.sequence(
+            cc.show(),
+            cc.spawn(cc.fadeIn(dcpAnimationDur),
+                cc.EaseSineOut.create(cc.moveBy(dcpAnimationDur, cc.p(0, dcpFadeInOffset))))
+        ));
     },
     hide: function () {
-        this.setVisible(false);
+        this.runAction(cc.sequence(
+            cc.spawn(cc.fadeOut(dcpAnimationDur),
+                cc.EaseSineIn.create(cc.moveBy(dcpAnimationDur, cc.p(0, -dcpFadeInOffset)))),
+            cc.hide()
+        ));
     },
     // Since this one is complicated, we move it out of the ctor() method.
     initPanel: function (panel) {

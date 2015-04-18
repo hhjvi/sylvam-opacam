@@ -10,6 +10,7 @@ so.UpDown = cc.Node.extend({
         if (value == undefined || value < lobnd) value = lobnd;
         else if (value > hibnd) value = hibnd;
         this._hibnd = hibnd; this._lobnd = lobnd; this._value = value;
+        this.setCascadeOpacityEnabled(true);
         var upBtn = new cc.MenuItemSprite(
             new cc.Sprite(so.res.up_btn), new cc.Sprite(so.res.up_btn_sel), this.up, this);
         upBtn.setAnchorPoint(cc.p(1, 0));

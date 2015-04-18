@@ -1,6 +1,5 @@
 var timeflowRates = [0, 1, 3, 6, 12, 30, 60];   // <- This is constant
 var dblclickMinIntv = 500;  // In milliseconds
-var dcpFadeInOffset = 40;
 so.StartupScene = cc.Scene.extend({
     _mapLayer: null,
     _scale: null,
@@ -87,9 +86,7 @@ so.StartupScene = cc.Scene.extend({
         this._timeDisp = timeDisp;
         // The development control panel
         var devpnl = new so.DevCtrlPanel(this.adjustDevPace, this);
-        // TODO: Animate the panel when showing/hiding
-        //devpnl.setPosition(cc.p(0, -dcpFadeInOffset));
-        devpnl.setPosition(cc.p(0, 0));
+        devpnl.setPosition(cc.p(0, -dcpFadeInOffset));
         devpnl.setVisible(false);
         this.addChild(devpnl, 1);
         this._devPanel = devpnl;
