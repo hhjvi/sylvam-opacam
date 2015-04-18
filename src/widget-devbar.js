@@ -7,9 +7,20 @@ so.DevBar = cc.Node.extend({
     _capacity: 0,
     _contents: [],
     _circles: [],
-    ctor: function () {
+    ctor: function (callback, target) {
         this._super();
         this.setContentSize(cc.size(so.width, devbarHeight));
+        var menuCall = new cc.MenuItemSprite(
+            new so.PureSprite(so.size.width, devbarHeight),
+            new so.PureSprite(so.size.width, devbarHeight, cc.color.WHITE, 32),
+            callback, target);
+        //menuCall.setContentSize(cc.size(so.width, devbarHeight));
+        //menuCall.setNormalizedPosition(cc.p(0.5, 0.5));
+        menuCall.setPosition(cc.p(0, 0));
+        menuCall.setAnchorPoint(cc.p(0, 0));
+        var menu = new cc.Menu(menuCall);
+        menu.setPosition(cc.p(0, 0));
+        this.addChild(menu, 999);
     },
     bringCircles: function (num) {
         for (var i = this._circles.length; i < num; i++) {

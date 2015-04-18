@@ -1,11 +1,13 @@
-timeflowRates = [0, 1, 3, 6, 12, 30, 60];   // <- This is constant
-dblclickMinIntv = 500;  // In milliseconds
+var timeflowRates = [0, 1, 3, 6, 12, 30, 60];   // <- This is constant
+var dblclickMinIntv = 500;  // In milliseconds
+var dcpFadeInOffset = 40;
 so.StartupScene = cc.Scene.extend({
     _mapLayer: null,
     _scale: null,
     _timeflowDisp: null,
     _timeDisp: null,
     _devBar: null,
+    _devPanel: null,
     onEnter: function () {
         this._super();
         var size = cc.director.getVisibleSize();
@@ -83,8 +85,16 @@ so.StartupScene = cc.Scene.extend({
         timeDisp.setPosition(cc.p(66, 24));
         this.addChild(timeDisp);
         this._timeDisp = timeDisp;
+        // The development control panel
+        var devpnl = new so.DevCtrlPanel();
+        // TODO: Animate the panel when showing/hiding
+        //devpnl.setPosition(cc.p(0, -dcpFadeInOffset));
+        devpnl.setPosition(cc.p(0, 0));
+        devpnl.setVisible(false);
+        this.addChild(devpnl);
+        this._devPanel = devpnl;
         // The development display bar
-        var devbar = new so.DevBar();
+        var devbar = new so.DevBar(devpnl.show, devpnl);
         devbar.setCapacity(so.balanceBase);
         devbar.setAnchorPoint(cc.p(0, 0));
         devbar.setPosition(cc.p(66, 2));
