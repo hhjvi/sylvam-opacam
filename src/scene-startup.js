@@ -8,6 +8,7 @@ so.StartupScene = cc.Scene.extend({
     _devBar: null,
     _devPanel: null,
     _resDisp: null, _stbltDisp: null,
+    _launcher: null,
     onEnter: function () {
         this._super();
         var size = cc.director.getVisibleSize();
@@ -111,6 +112,13 @@ so.StartupScene = cc.Scene.extend({
         sd.setColor(cc.color.GREEN);
         this.addChild(sd);
         this._stbltDisp = sd;
+        // The launch controller
+        var lchr = new so.Launcher(function () { console.log(arguments); }, this);
+        lchr.setAnchorPoint(cc.p(1, 1));
+        lchr.setNormalizedPosition(cc.p(1, 1));
+        this.addChild(lchr);
+        this._launcher = lchr;
+        window.l = lchr;
     },
     _player: null,
     _lcone: null,

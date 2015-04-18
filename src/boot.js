@@ -7,14 +7,17 @@ so.res = {
     up_btn: 'res/up-btn.png',
     up_btn_sel: 'res/up-btn-sel.png',
     down_btn: 'res/down-btn.png',
-    down_btn_sel: 'res/down-btn-sel.png'
+    down_btn_sel: 'res/down-btn-sel.png',
+    launch: 'res/launch.png',
+    launch_sel: 'res/launch-sel.png'
 };
 so.res_preload = [
     so.res.white_px,
     so.res.img_zoom_in, so.res.img_zoom_in_sel,
     so.res.img_zoom_in, so.res.img_zoom_out_sel,
     so.res.up_btn, so.res.up_btn_sel,
-    so.res.down_btn, so.res.down_btn_sel
+    so.res.down_btn, so.res.down_btn_sel,
+    so.res.launch, so.res.launch_sel
 ];
 so.size = cc.size(0, 0);
 so.centre = cc.p(0, 0);
