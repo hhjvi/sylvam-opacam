@@ -31,7 +31,7 @@ so.Tooltip = cc.Node.extend({
 so.enableTooltip = function (host) {
     host._so_tooltips = [];
     host._so_tooltipLayer = new cc.Layer();
-    host.addChild(host._so_tooltipLayer);
+    host.addChild(host._so_tooltipLayer, 2333333);
     cc.eventManager.addListener({
         event: cc.EventListener.MOUSE,
         onMouseMove: function (e) {
