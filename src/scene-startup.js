@@ -210,6 +210,9 @@ so.StartupScene = cc.Scene.extend({
         // When you get 2500 pts in energy, you get a 10% discount. And that's it.
         return 4500 / (this._devPoints[0] + 4500);
     },
+    energyUpgradeBonus: function () {
+        return 500 * this._devLevels[0];
+    },
     // One tick is 2 months.
     tick: function () {
         this._monCnt++;
@@ -228,6 +231,9 @@ so.StartupScene = cc.Scene.extend({
                 // Update for displaying in the develop panel
                 lastReq = nextReq;
                 nextReq = this.levelRequirement(i, this._devLevels[i] + 1);
+                // If the energy dev. level is going up, we get some resources
+                // Since i is a string ('0'), use == instead of ===
+                if (i == 0) this._resource += this.energyUpgradeBonus();
             }
             this._devPanel.updateLevelLabel(i, this._devLevels[i],
                 (this._devPoints[i] - lastReq) / (nextReq - lastReq));
