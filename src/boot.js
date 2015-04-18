@@ -1,10 +1,12 @@
 so.res = {
+    white_px: 'res/white-px.png',
     img_zoom_in: 'res/zoom-in.png',
     img_zoom_in_sel: 'res/zoom-in-sel.png',
     img_zoom_out: 'res/zoom-out.png',
     img_zoom_out_sel: 'res/zoom-out-sel.png'
 };
 so.res_preload = [
+    so.res.white_px,
     so.res.img_zoom_in, so.res.img_zoom_in_sel,
     so.res.img_zoom_in, so.res.img_zoom_out_sel
 ];
