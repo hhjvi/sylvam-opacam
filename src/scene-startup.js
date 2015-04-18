@@ -1,6 +1,9 @@
+timeflowRates = [0, 1, 3, 6, 12, 30, 60];   // <- This is constant
+dblclickMinIntv = 500;  // In milliseconds
 so.StartupScene = cc.Scene.extend({
     _mapLayer: null,
     _scale: null,
+    _timeflowDisp: null,
     _timeDisp: null,
     onEnter: function () {
         this._super();
@@ -56,7 +59,21 @@ so.StartupScene = cc.Scene.extend({
         zoomOutBtn.setAnchorPoint(cc.p(0, 1));
         zoomOutBtn.setScale(0.5);
         zoomOutBtn.setPosition(cc.p(182, so.size.height - 6));
-        var menu = new cc.Menu(zoomInBtn, zoomOutBtn);
+        // The time-flow control
+        var tfc = new cc.MenuItemSprite(
+            new so.ContentCircle(30, cc.color(255, 255, 255, 192)),
+            new so.ContentCircle(30, cc.color(192, 192, 192, 192)),
+            this.timeflowToggle, this);
+        tfc.setAnchorPoint(cc.p(0, 0));
+        tfc.setPosition(cc.p(0, 0));
+        // ... along with the label
+        var tfd = new cc.LabelTTF('x1', 'Arial', 30);
+        tfd.setAnchorPoint(cc.p(0.5, 0.5));
+        tfd.setPosition(30, 26);
+        tfd.setColor(cc.color.BLACK);
+        tfc.addChild(tfd);
+        this._timeflowDisp = tfd;
+        var menu = new cc.Menu(zoomInBtn, zoomOutBtn, tfc);
         menu.setPosition(cc.p(0, 0));
         this.addChild(menu);
         // The time display
@@ -96,7 +113,6 @@ so.StartupScene = cc.Scene.extend({
                 this._solarSys[i].x * this._solarSys[i].x +
                 this._solarSys[i].y * this._solarSys[i].y;
         }
-        console.log(this._solarSys);
     },
 
     _mapScale: 1,
@@ -109,6 +125,27 @@ so.StartupScene = cc.Scene.extend({
         this._mapScale /= Math.sqrt(2);
         this._mapLayer.setVisibleScale(this._mapScale);
         this._scale.dispScale(this._mapScale * so.ly2pix);
+    },
+    _timeflowIdx: 1,    // timeflowRates[_timeflowIdx] is 1x
+    _lastTimeflowTapTime: 0,
+    _lastTimeflowIdx: -1,   // The flow index before last pause
+    timeflowToggle: function () {
+        var curtime = (new Date()).getTime();
+        if (curtime - this._lastTimeflowTapTime <= dblclickMinIntv) {
+            // Double-click!
+            if (this._lastTimeflowIdx !== timeflowRates.length - 1)
+                this._timeflowIdx = this._lastTimeflowIdx + 1;
+            else this._timeflowIdx = this._lastTimeflowIdx;
+            curtime = 0;
+        } else {
+            this._lastTimeflowIdx = this._timeflowIdx;
+            this._timeflowIdx = Number(!this._timeflowIdx); // 0 => 1, other => 0
+        }
+        this._lastTimeflowTapTime = curtime;
+        if (this._timeflowIdx === 0)
+            this._timeflowDisp.setString('--');
+        else
+            this._timeflowDisp.setString('x' + timeflowRates[this._timeflowIdx].toString());
     },
 
     _monCnt: 0,
@@ -130,7 +167,7 @@ so.StartupScene = cc.Scene.extend({
     },
     // Called every half second.
     step: function () {
-        this.tick();
+        for (var i = 0; i < timeflowRates[this._timeflowIdx]; i++) this.tick();
         this.refreshDisp();
     }
 });

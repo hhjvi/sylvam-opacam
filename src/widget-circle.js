@@ -12,3 +12,13 @@ so.Circle = cc.DrawNode.extend({
         return cc.size(this._radius * 2, this._radius * 2);
     }
 });
+
+// Circle with a content size and a fixed radius.
+// Can still be zoomed/scaled though.
+so.ContentCircle = cc.DrawNode.extend({
+    ctor: function (radius, colour) {
+        cc.DrawNode.prototype.ctor.call(this);
+        this.drawDot(cc.p(radius, radius), radius, colour);
+        this.setContentSize(cc.size(radius + radius, radius + radius));
+    }
+});
