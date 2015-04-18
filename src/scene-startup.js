@@ -221,10 +221,10 @@ so.StartupScene = cc.Scene.extend({
     energyUpgradeBonus: function () {
         return 500 * this._devLevels[0];
     },
-    // One tick is 2 months.
+    // One tick is 1 month.
     tick: function () {
         this._monCnt++;
-        this._lconeRadius += 1 / 6;
+        this._lconeRadius += 1 / 12;
         this._resource -= (10 + 5 * this._devPaceTot) * this.energyCoefficient();
         this._stability += (so.balanceBase + this._devLevelsTot - this._devPaceTot) * 0.1;
         if (this._stability > 100) this._stability = 100;
