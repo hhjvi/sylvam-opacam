@@ -2,12 +2,16 @@ so.res = {
 };
 so.res_preload = [
 ];
+so.size = cc.size(0, 0);
+so.centre = cc.p(0, 0);
 
 cc.game.onStart = function () {
     cc.view.adjustViewPort(true);
     cc.view.setDesignResolutionSize(640, 320, cc.ResolutionPolicy.SHOW_ALL);
     cc.view.resizeWithBrowserSize(true);
     cc.director.setDisplayStats(true);
+    so.size = cc.director.getVisibleSize();
+    so.centre = cc.p(so.size.width * 0.5, so.size.height * 0.5);
     // Load resources and here we go!
     cc.LoaderScene.preload(so.res_preload, function () {
         cc.director.runScene(new so.StartupScene());
