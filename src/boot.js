@@ -13,6 +13,7 @@ so.centre = cc.p(0, 0);
 
 // Game-related constants
 so.ly2pix = 100;    // By default, 100 pixels = 1 light year
+so.balanceBase = 5; // The balance point is (5 + sum of all levels)
 
 cc.game.onStart = function () {
     cc.view.adjustViewPort(true);

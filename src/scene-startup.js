@@ -5,6 +5,7 @@ so.StartupScene = cc.Scene.extend({
     _scale: null,
     _timeflowDisp: null,
     _timeDisp: null,
+    _devBar: null,
     onEnter: function () {
         this._super();
         var size = cc.director.getVisibleSize();
@@ -82,6 +83,14 @@ so.StartupScene = cc.Scene.extend({
         timeDisp.setPosition(cc.p(66, 24));
         this.addChild(timeDisp);
         this._timeDisp = timeDisp;
+        // The development display bar
+        var devbar = new so.DevBar();
+        devbar.setCapacity(so.balanceBase);
+        devbar.setAnchorPoint(cc.p(0, 0));
+        devbar.setPosition(cc.p(66, 2));
+        this.addChild(devbar);
+        this._devBar = devbar;
+        window.d = devbar;
     },
     _player: null,
     _lcone: null,
