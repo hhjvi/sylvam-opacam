@@ -100,7 +100,7 @@ so.StartupScene = cc.Scene.extend({
         this.addChild(devbar, 0);
         this._devBar = devbar;
         // The resource and stability display
-        var rd = new cc.LabelTTF('Res. ' + so.resourceSeed.toString(), 'Arial', 20);
+        var rd = new cc.LabelTTF('Res. ' + so.resourceSeed.toString() + '.0', 'Arial', 20);
         rd.setAnchorPoint(cc.p(1, 0));
         rd.setPosition(cc.p(so.size.width - 4, 24));
         this.addChild(rd);
@@ -206,11 +206,15 @@ so.StartupScene = cc.Scene.extend({
         if (i === 0) return (50 * lv + 450) * lv;
         else return (250 * lv + 750) * lv;
     },
+    energyCoefficient: function () {
+        // When you get 2500 pts in energy, you get a 10% discount. And that's it.
+        return 4500 / (this._devPoints[0] + 4500);
+    },
     // One tick is 2 months.
     tick: function () {
         this._monCnt++;
         this._lconeRadius += 1 / 6;
-        this._resource -= (10 + 5 * this._devPaceTot);
+        this._resource -= (10 + 5 * this._devPaceTot) * this.energyCoefficient();
         this._stability += (so.balanceBase + this._devLevelsTot - this._devPaceTot) * 0.1;
         if (this._stability > 100) this._stability = 100;
         // Let's develop!
@@ -238,8 +242,9 @@ so.StartupScene = cc.Scene.extend({
             this._solarSys[i].node.setVisible(
                 this._solarSys[i].distSq <= this._lconeRadius * this._lconeRadius);
         }
-        this._resDisp.setString('Res. ' + this._resource.toString());
-        var ss = (this._stability + 0.00625).toString();
+        var ss = (this._resource + 0.00625).toString();
+        this._resDisp.setString('Res. ' + ss.substr(0, ss.lastIndexOf('.') + 2));
+        ss = (this._stability + 0.00625).toString();
         this._stbltDisp.setString('Stab. ' + ss.substr(0, ss.lastIndexOf('.') + 2));
         if (this._stability >= 80) this._stbltDisp.setColor(cc.color.GREEN);
         else if (this._stability >= 60) this._stbltDisp.setColor(cc.color.YELLOW);
