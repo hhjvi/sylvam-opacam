@@ -86,7 +86,7 @@ so.StartupScene = cc.Scene.extend({
         this.addChild(timeDisp);
         this._timeDisp = timeDisp;
         // The development control panel
-        var devpnl = new so.DevCtrlPanel();
+        var devpnl = new so.DevCtrlPanel(this.adjustDevPace, this);
         // TODO: Animate the panel when showing/hiding
         //devpnl.setPosition(cc.p(0, -dcpFadeInOffset));
         devpnl.setPosition(cc.p(0, 0));
@@ -165,6 +165,13 @@ so.StartupScene = cc.Scene.extend({
             this._timeflowDisp.setString('--');
         else
             this._timeflowDisp.setString('x' + timeflowRates[this._timeflowIdx].toString());
+    },
+    adjustDevPace: function (dev) {
+        var c = [];
+        for (var i in dcpItems) {
+            c.push({num: dev[dcpItems[i][0]], colour: dcpItems[i][2]});
+        }
+        this._devBar.setContents(c);
     },
 
     _monCnt: 0,
