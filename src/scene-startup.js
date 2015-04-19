@@ -12,7 +12,7 @@ so.StartupScene = cc.Scene.extend({
     onEnter: function () {
         this._super();
         var size = cc.director.getVisibleSize();
-        mapLayer = new so.MapLayer();
+        mapLayer = new so.MapLayer(this.mapClick, this);
         mapLayer.setContentSize(cc.size(0, 0));
         mapLayer.setVisibleCentre(0, 0);
         this.addChild(mapLayer);
@@ -30,19 +30,25 @@ so.StartupScene = cc.Scene.extend({
         // The drag & drop mover
         cc.eventManager.addListener({
             event: cc.EventListener.MOUSE,
-            _dragging: false,
+            _dragging: false, _dragMoved: true, // Prevent accident MouseUps
             _moveTarget: _parent._mapLayer,
             onMouseDown: function (e) {
                 this._dragging = true;
+                this._dragMoved = false;
             },
             onMouseMove: function (e) {
                 if (!this._dragging) return;
+                this._dragMoved = true;
                 this._moveTarget.setVisibleCentre(
                     this._moveTarget.getVisibleCentreX() - e.getDeltaX(),
                     this._moveTarget.getVisibleCentreY() - e.getDeltaY());
             },
             onMouseUp: function (e) {
                 this._dragging = false;
+                if (!this._dragMoved) {
+                    this._moveTarget.click(e.getLocation());
+                    this._dragMoved = true;
+                }
             }
         }, this._mapLayer);
         // The scale
@@ -153,6 +159,9 @@ so.StartupScene = cc.Scene.extend({
         this._mapScale /= Math.sqrt(2);
         this._mapLayer.setVisibleScale(this._mapScale);
         this._scale.dispScale(this._mapScale * so.ly2pix);
+    },
+    mapClick: function (p) {
+        console.log(p);
     },
     _timeflowIdx: 1,    // timeflowRates[_timeflowIdx] is 1x
     _lastTimeflowTapTime: 0,
