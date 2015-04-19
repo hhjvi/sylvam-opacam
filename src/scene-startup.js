@@ -190,8 +190,11 @@ so.StartupScene = cc.Scene.extend({
     },
     mapClick: function (p, idx) {
         if (this._idxToLaunch === -1) return;
-        var selSolarIdx = this._mapLayer.clickableChild(idx).bindedSolarSys;
-        var selSolarSys = this._cosmos.solars[selSolarIdx];
+        var selSolarIdx, selSolarSys;
+        if (idx >= 0) {
+            selSolarIdx = this._mapLayer.clickableChild(idx).bindedSolarSys;
+            selSolarSys = this._cosmos.solars[selSolarIdx];
+        }
         switch (this._idxToLaunch) {
         case 0: // Spacecraft
             if (idx === -1) return;
@@ -220,9 +223,15 @@ so.StartupScene = cc.Scene.extend({
             this._notificator.addNotification(
                 'Mass Point sent to ' + selSolarSys.name, cc.color(192, 0, 0));
             break;
-        case 2: // 3->2 Dimension Attack
-            break;
-        case 3: // 2->1 Dimension Attack
+        case 2: // 3->2 Dimension Decreaser
+            var dc = so.DimDcrsr(this._cosmos, 0,
+                cc.p(0, 0), cc.p(p.x / so.ly2pix, p.y / so.ly2pix));
+            dc.id = this._cosmos.flyers.push(dc) - 1;
+            var dcDisp = new so.Circle(2, cc.color(64, 0, 192));
+            dcDisp.setPosition(this._mapLayer.at(0, 0));
+            this._mapLayer.addMapPoint(dcDisp, 9999);
+            this._flyerNodes[dc.id] = dcDisp;
+            this._notificator.addNotification('Dimension Decreaser sent', cc.color(64, 0, 192));
             break;
         }
         this._idxToLaunch = -1;
@@ -333,7 +342,12 @@ so.StartupScene = cc.Scene.extend({
         // Update the map
         for (var i in this._cosmos.flyers) {
             var f = this._cosmos.flyers[i];
+            if (!this._flyerNodes[f.id]) debugger;
             this._flyerNodes[f.id].setPosition(this._mapLayer.at(f.x * so.ly2pix, f.y * so.ly2pix));
+            if (f.radius) {
+                // A Dimension Decreaser OwO
+                this._flyerNodes[f.id].setRadius(f.radius * so.ly2pix);
+            }
         }
     },
     // Called every half second.

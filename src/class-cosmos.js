@@ -5,7 +5,8 @@ so.Cosmos = function () {
         civils: [],
         flyers: [],
         _newlyReachedSpccrafts: [],
-        _newlyReachedMassPts: []
+        _newlyReachedMassPts: [],
+        _newlyReachedDimDcrsrs: []
     };
     r.solars[0] = so.SolarSystem(r, 'Nova Terra', cc.color(128, 192, 255), 0, 0, 10);
     r.solars[0].civil = 0;
@@ -66,6 +67,12 @@ so.Cosmos.tick = function () {
             this.flyers[m.id] = this.flyers.pop();
             this.flyers[m.id].id = m.id;
         }
+    }
+    while (this._newlyReachedDimDcrsrs.length > 0) {
+        var d = this._newlyReachedDimDcrsrs.pop();
+        d.x = d.destx, d.y = d.desty;
+        d.radius = 0;
+        d.tick = function () { this.radius += 1 / 12; };
     }
 };
 

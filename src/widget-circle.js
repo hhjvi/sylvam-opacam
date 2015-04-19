@@ -1,13 +1,20 @@
 so.Circle = cc.DrawNode.extend({
-    _radius: 0,
+    _radius: 0, _colour: null,
     ctor: function (radius, colour) {
         cc.DrawNode.prototype.ctor.call(this);
         this._radius = radius;
+        this._colour = colour;
         this.drawDot(cc.p(0, 0), radius, colour);
     },
     setColour: function (colour) {
         this.clear();
+        this._colour = colour;
         this.drawDot(cc.p(0, 0), this._radius, colour);
+    },
+    setRadius: function (radius) {
+        this.clear();
+        this._radius = radius;
+        this.drawDot(cc.p(0, 0), radius, this._colour);
     },
     getBLCorner: function () {
         return cc.p(this._position.x - this._radius, this._position.y - this._radius);

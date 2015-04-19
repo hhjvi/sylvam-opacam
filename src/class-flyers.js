@@ -52,3 +52,19 @@ so.MassPoint = function (cosmos, civil, src, dest, callback, target) {
 
     return r;
 };
+
+so.DimDcrsr = function (cosmos, civil, src, dest) {
+    var r = {
+        cosmos: cosmos,
+        speed: 1,
+        civil: civil,
+        srcx: src.x, srcy: src.y,
+        x: src.x, y: src.y,
+        destx: dest.x, desty: dest.y,
+        id: 0,  // Give it an ID manually
+        destSolarIdx: -1    // Manual
+    };
+    r.tick = so.Flyer.tick(r.cosmos._newlyReachedDimDcrsrs);
+
+    return r;
+};
