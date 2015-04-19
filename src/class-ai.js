@@ -14,7 +14,8 @@ so.Cosmos.tick_AI = function () {
             // For LD, only the simplest decision is used...
             var max = so.balanceBase + curCiv.devLevelsTot;
             var avg = Math.floor(max / 3);
-            curCiv.devPace = [max - avg * 2, avg, avg];
+            curCiv.devPace = [avg, avg, avg];
+            curCiv.devPace[randomInt(3)] = max - avg * 2;
         }
     }
 };

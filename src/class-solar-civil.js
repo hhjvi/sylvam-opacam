@@ -58,14 +58,15 @@ so.Civilization = function (name, badge, colour) {
 };
 
 so.Civilization.levelRequirement = function (i, lv) {
-    return (250 * lv + 750) * lv;
+    if (i === 0) return ((6 * lv + 350) * lv + 850) * lv;
+    else return (450 * lv + 750) * lv;
 };
 so.Civilization.energyCoefficient = function () {
-    // When you get 5000 pts in energy, you get a 10% discount. And that's it.
-    return 45000 / (this.devPoints[0] + 45000);
+    // When you get 10000 pts in energy, you get a 10% discount. And that's it.
+    return 90000 / (this.devPoints[0] + 90000);
 };
 so.Civilization.energyUpgradeBonus = function () {
-    return 500 * this.devLevels[0];
+    return 400 * this.devLevels[0];
 };
 
 // One tick is 1 month.
