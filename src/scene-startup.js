@@ -29,21 +29,23 @@ so.StartupScene = cc.Scene.extend({
         var _parent = this;
         // The drag & drop mover
         cc.eventManager.addListener({
-            event: cc.EventListener.MOUSE,
+            event: cc.EventListener.TOUCH_ONE_BY_ONE,
             _dragging: false, _dragMoved: true, // Prevent accident MouseUps
             _moveTarget: _parent._mapLayer,
-            onMouseDown: function (e) {
+            swallowTouches: true,
+            onTouchBegan: function (e) {
                 this._dragging = true;
                 this._dragMoved = false;
+                return true;
             },
-            onMouseMove: function (e) {
+            onTouchMoved: function (e) {
                 if (!this._dragging) return;
                 this._dragMoved = true;
                 this._moveTarget.setVisibleCentre(
-                    this._moveTarget.getVisibleCentreX() - e.getDeltaX(),
-                    this._moveTarget.getVisibleCentreY() - e.getDeltaY());
+                    this._moveTarget.getVisibleCentreX() - e.getDelta().x,
+                    this._moveTarget.getVisibleCentreY() - e.getDelta().y);
             },
-            onMouseUp: function (e) {
+            onTouchEnded: function (e) {
                 this._dragging = false;
                 if (!this._dragMoved) {
                     this._moveTarget.click(e.getLocation());
@@ -118,7 +120,7 @@ so.StartupScene = cc.Scene.extend({
         this.addChild(sd);
         this._stbltDisp = sd;
         // The launch controller
-        var lchr = new so.Launcher(function () { console.log(arguments); }, this);
+        var lchr = new so.Launcher(this.launchClick, this);
         lchr.setAnchorPoint(cc.p(1, 1));
         lchr.setNormalizedPosition(cc.p(1, 1));
         this.addChild(lchr);
@@ -160,8 +162,28 @@ so.StartupScene = cc.Scene.extend({
         this._mapLayer.setVisibleScale(this._mapScale);
         this._scale.dispScale(this._mapScale * so.ly2pix);
     },
+    _idxToLaunch: -1,
+    launchClick: function (idx) {
+        if (this._idxToLaunch === idx) this._idxToLaunch = -1;  // Cancelling
+        else {
+            this._idxToLaunch = idx;
+            // TODO: Send a notification
+        }
+    },
     mapClick: function (p) {
-        //console.log(p);
+        if (this._idxToLaunch >= 0) switch (this._idxToLaunch) {
+        case 0: // Spacecraft
+            console.log('Send a spacecraft to (' + p.x + ', ' + p.y + ')');
+            break;
+        case 1: // Mass Point
+            console.log('Send a mass point to (' + p.x + ', ' + p.y + ')');
+            break;
+        case 2: // 3->2 Dimension Attack
+            break;
+        case 3: // 2->1 Dimension Attack
+            break;
+        }
+        this._idxToLaunch = -1;
     },
     _timeflowIdx: 1,    // timeflowRates[_timeflowIdx] is 1x
     _lastTimeflowTapTime: 0,
