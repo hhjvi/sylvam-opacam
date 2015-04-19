@@ -12,7 +12,7 @@ so.Notificator = cc.Node.extend({
         for (var i in c) c[i].runAction(cc.moveBy(ntfctTransitionDur, cc.p(0, ntfctLineHeight)));
         // Add the new comer
         colour = colour || cc.color.WHITE;
-        var label = new cc.LabelTTF(text, 'Arial', ntfctFontSize);
+        var label = new cc.LabelTTF(text, 'Karla', ntfctFontSize);
         label.setAnchorPoint(cc.p(0, 0));
         label.setColor(colour);
         label.setOpacity(0);

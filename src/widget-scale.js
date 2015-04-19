@@ -12,7 +12,7 @@ so.Scale = cc.Node.extend({
         this._painter = new cc.DrawNode();
         this._painter.setPosition(cc.p(6, scaleHeight - 12));
         this.addChild(this._painter);
-        this._label = new cc.LabelTTF('1 ly', 'Arial', 18);
+        this._label = new cc.LabelTTF('1 ly', 'Karla', 18);
         this._label.setAnchorPoint(cc.p(0, 1));
         this._label.setPosition(cc.p(4, scaleHeight - 24));
         this.addChild(this._label);

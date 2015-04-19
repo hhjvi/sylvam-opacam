@@ -80,7 +80,7 @@ so.StartupScene = cc.Scene.extend({
         tfc.setAnchorPoint(cc.p(0, 0));
         tfc.setPosition(cc.p(0, 0));
         // ... along with the label
-        var tfd = new cc.LabelTTF('x1', 'Arial', 30);
+        var tfd = new cc.LabelTTF('x1', 'Karla', 30);
         tfd.setAnchorPoint(cc.p(0.5, 0.5));
         tfd.setPosition(30, 26);
         tfd.setColor(cc.color.BLACK);
@@ -90,7 +90,7 @@ so.StartupScene = cc.Scene.extend({
         menu.setPosition(cc.p(0, 0));
         this.addChild(menu);
         // The time display
-        var timeDisp = new cc.LabelTTF('0 mon', 'Arial', 20);
+        var timeDisp = new cc.LabelTTF('0 yrs 0 mon', 'Karla', 20);
         timeDisp.setAnchorPoint(cc.p(0, 0));
         timeDisp.setPosition(cc.p(66, 24));
         this.addChild(timeDisp);
@@ -109,12 +109,12 @@ so.StartupScene = cc.Scene.extend({
         this.addChild(devbar, 0);
         this._devBar = devbar;
         // The resource and stability display
-        var rd = new cc.LabelTTF('Res. ' + so.resourceSeed.toString() + '.0', 'Arial', 20);
+        var rd = new cc.LabelTTF('Res. ' + so.resourceSeed.toString() + '.0', 'Karla', 20);
         rd.setAnchorPoint(cc.p(1, 0));
         rd.setPosition(cc.p(so.size.width - 4, 24));
         this.addChild(rd);
         this._resDisp = rd;
-        var sd = new cc.LabelTTF('Stab. 100.0', 'Arial', 20);
+        var sd = new cc.LabelTTF('Stab. 100.0', 'Karla', 20);
         sd.setAnchorPoint(cc.p(1, 1));
         sd.setPosition(cc.p(so.size.width - 4, 24));
         sd.setColor(cc.color.GREEN);

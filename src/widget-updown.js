@@ -1,3 +1,5 @@
+// Up, down, up, down, this is a machine.
+
 var updownSize = cc.size(100, 64);
 var updownFontSize = 32;
 so.UpDown = cc.Node.extend({
@@ -27,7 +29,7 @@ so.UpDown = cc.Node.extend({
         menu.setContentSize(updownSize);
         this.setContentSize(updownSize);
         // The label
-        this._label = new cc.LabelTTF(value.toString(), 'Arial', updownFontSize);
+        this._label = new cc.LabelTTF(value.toString(), 'Karla', updownFontSize);
         this._label.setAnchorPoint(cc.p(0, 0.5));
         this._label.setNormalizedPosition(cc.p(0.04, 0.5));
         this._label.setColor(lblcolour || cc.color.WHITE);

@@ -50,7 +50,7 @@ so.DevCtrlPanel = cc.Layer.extend({
     // Since this one is complicated, we move it out of the ctor() method.
     initPanel: function (panel) {
         // The title label
-        var titleLbl = new cc.LabelTTF('Civilization Development', 'Arial', 40);
+        var titleLbl = new cc.LabelTTF('Civilization Development', 'Karla', 40);
         titleLbl.setAnchorPoint(cc.p(0, 1));
         titleLbl.setNormalizedPosition(cc.p(0, 0.75));
         this.addChild(titleLbl);
@@ -63,12 +63,12 @@ so.DevCtrlPanel = cc.Layer.extend({
         };
         for (var i in dcpItems) {
             this._values[dcpItems[i][0]] = 0;
-            var nameLbl = new cc.LabelTTF(dcpItems[i][1], 'Arial', updownFontSize);
+            var nameLbl = new cc.LabelTTF(dcpItems[i][1], 'Karla', updownFontSize);
             nameLbl.setAnchorPoint(cc.p(1, 0.5));
             nameLbl.setNormalizedPosition(cc.p(0.468, 0.68 - 0.27 * i));
             nameLbl.setColor(dcpItems[i][2]);
             panel.addChild(nameLbl);
-            var levelLbl = new cc.LabelTTF('Level 0\n0%', 'Arial', updownFontSize * 0.4);
+            var levelLbl = new cc.LabelTTF('Level 0\n0%', 'Karla', updownFontSize * 0.4);
             levelLbl.setNormalizedPosition(cc.p(0.538, 0.68 - 0.27 * i));
             levelLbl.setColor(dcpItems[i][2]);
             panel.addChild(levelLbl);
