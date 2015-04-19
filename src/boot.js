@@ -8,8 +8,10 @@ so.res = {
     up_btn_sel: 'res/up-btn-sel.png',
     down_btn: 'res/down-btn.png',
     down_btn_sel: 'res/down-btn-sel.png',
-    launch: 'res/launch.png',
-    launch_sel: 'res/launch-sel.png'
+    launch: [
+        ['res/launch-spccraft.png', 'res/launch-spccraft-sel.png'],
+        ['res/launch-masspt.png', 'res/launch-masspt-sel.png']
+    ]
 };
 so.res_preload = [
     so.res.white_px,
@@ -17,7 +19,8 @@ so.res_preload = [
     so.res.img_zoom_in, so.res.img_zoom_out_sel,
     so.res.up_btn, so.res.up_btn_sel,
     so.res.down_btn, so.res.down_btn_sel,
-    so.res.launch, so.res.launch_sel
+    so.res.launch[0][0], so.res.launch[0][1],
+    so.res.launch[1][0], so.res.launch[1][1]
 ];
 so.size = cc.size(0, 0);
 so.centre = cc.p(0, 0);
