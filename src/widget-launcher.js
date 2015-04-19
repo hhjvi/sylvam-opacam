@@ -46,9 +46,13 @@ so.Launcher = cc.Node.extend({
             this._items[i].setPositionY(i * lchrItemHeight);
         }
         this._items.pop();
-        this._launchBtn.setPositionY(-this._items.length * lchrItemHeight);
+        this._launchMenu.setPositionY(-this._items.length * lchrItemHeight);
     },
     launch: function (sender) {
         if (this._callback) this._callback.call(this._target, sender.getTag());
+    },
+    getLaunchButtonCentre: function (idx) {
+        return this.convertToWorldSpace(cc.pSub(
+            this._launchBtns[idx].getPosition(), cc.p(lchrBtnWidth / 2, lchrBtnWidth / 2)));
     }
 });

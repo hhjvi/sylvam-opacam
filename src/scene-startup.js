@@ -8,7 +8,8 @@ so.StartupScene = cc.Scene.extend({
     _devBar: null,
     _devPanel: null,
     _resDisp: null, _stbltDisp: null,
-    _launcher: null,
+    _notificator: null,
+    _launcher: null, _launchMarker: null,
     onEnter: function () {
         this._super();
         var size = cc.director.getVisibleSize();
@@ -119,13 +120,22 @@ so.StartupScene = cc.Scene.extend({
         sd.setColor(cc.color.GREEN);
         this.addChild(sd);
         this._stbltDisp = sd;
+        // The notification display
+        var ntf = new so.Notificator();
+        ntf.setPosition(cc.p(0, 60));
+        this.addChild(ntf);
+        this._notificator = ntf;
         // The launch controller
         var lchr = new so.Launcher(this.launchClick, this);
         lchr.setAnchorPoint(cc.p(1, 1));
         lchr.setNormalizedPosition(cc.p(1, 1));
         this.addChild(lchr);
         this._launcher = lchr;
-        window.l = lchr;
+        // The launch marker
+        var lmrk = new so.Circle(30, cc.color(255, 255, 0, 64));
+        lmrk.setVisible(false);
+        this.addChild(lmrk);
+        this._launchMarker = lmrk;
     },
     _cosmos: null,
     _lcone: null,
@@ -165,24 +175,30 @@ so.StartupScene = cc.Scene.extend({
     },
     _idxToLaunch: -1,
     launchClick: function (idx) {
-        if (this._idxToLaunch === idx) this._idxToLaunch = -1;  // Cancelling
-        else {
+        if (this._idxToLaunch === idx) {    // Cancelling
+            this._idxToLaunch = -1;
+            this._notificator.addNotification('Launch cancelled');
+            this._launchMarker.setVisible(false);
+        } else {
             this._idxToLaunch = idx;
-            // TODO: Send a notification
+            this._notificator.addNotification('Select your destination, click again to cancel');
+            this._launchMarker.setVisible(true);
+            this._launchMarker.setPosition(this._launcher.getLaunchButtonCentre(idx));
         }
     },
     mapClick: function (p, idx) {
-        console.log(p, idx);
-        if (this._idxToLaunch >= 0) switch (this._idxToLaunch) {
+        if (this._idxToLaunch === -1) return;
+        var selSolarIdx = this._mapLayer.clickableChild(idx).bindedSolarSys;
+        switch (this._idxToLaunch) {
         case 0: // Spacecraft
             if (idx === -1) return;
-            var selSolarIdx = this._mapLayer.clickableChild(idx).bindedSolarSys;
-            console.log('Send a spacecraft to ' +
-                this._cosmos.solars[selSolarIdx].name + ' [' +
-                selSolarIdx + ']');
+            this._notificator.addNotification(
+                'Spacecraft sent to ' + this._cosmos.solars[selSolarIdx].name, cc.color(255, 255, 32));
             break;
         case 1: // Mass Point
-            console.log('Send a mass point to (' + p.x + ', ' + p.y + ')');
+            if (idx === -1) return;
+            this._notificator.addNotification(
+                'Mass Point sent to ' + this._cosmos.solars[selSolarIdx].name, cc.color(255, 32, 32));
             break;
         case 2: // 3->2 Dimension Attack
             break;
@@ -190,6 +206,7 @@ so.StartupScene = cc.Scene.extend({
             break;
         }
         this._idxToLaunch = -1;
+        this._launchMarker.setVisible(false);
     },
     _timeflowIdx: 1,    // timeflowRates[_timeflowIdx] is 1x
     _lastTimeflowTapTime: 0,
