@@ -19,3 +19,46 @@ so.stbdTexts_startup = [
         'and brought a few machines here, so they could develop a bit faster.',
     'They called their civilization \'Cygnia\'. And the adventures of Cygnia begins...'
 ];
+
+so.stbdTitles_lightCones = [
+    'The Light Cone',
+    'The Light Cone'
+];
+so.stbdTexts_lightCones = [
+    'As we all know, even the light has a limited speed. ' +
+        'Therefore, if something is too far, its light will spend some time on the way ' +
+        'and we cannot see them. The range we can see is called the light cone.',
+    'It\'s the same in the new universe. In the game it is marked by the dark blue circle.'
+];
+
+so.stbdTitles_basCtrl = [
+    'Basic Controls',
+    'Basic Controls',
+    'Basic Controls',
+    'Basic Controls'
+];
+so.stbdTexts_basCtrl = [
+    'The circle in the bottom-left corner shows the time flow. ' +
+        'Click it to pause and double-click to fast-forward.',
+    'The bar on the bottom shows the current development of the civilization. ' +
+        'Click it to adjust the development pace.',
+    'Try developing Basic Science at the speed of 6 first soon.',
+    'Drag & drop the map to move around. ' +
+        'There are zoom in/out buttons in the top-left corner. Make good use of them.'
+];
+
+so.stbdTitles_crft1 = [
+    'Spacecrafts',
+    'Spacecrafts',
+    'Spacecrafts',
+    ''
+];
+so.stbdTexts_crft1 = [
+    'Now spacecrafts are available. Click on the button on the top-right corner, ' +
+        'Select one of Cygnia\'s solar systems (now there is only one called Nova Terra) as the starting point, ' +
+        'and select another solar system as the destination.',
+    'Sometimes you don\'t see other solar systems anywhere on the screen. ' +
+        'You can fast-forward until one appears in the light cone.',
+    'Now spacecrafts fly very slow. They\'ll fly faster as Cygnia develop.',
+    'Time to get some energy. Developing energy helps reduce resource comsumption.'
+];

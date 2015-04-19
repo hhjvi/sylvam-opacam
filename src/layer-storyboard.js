@@ -6,8 +6,8 @@ so.Storyboard = cc.LayerColor.extend({
     _titleLbl: null,
     _textLbl: null,
     ctor: function (titles, texts, opacity) {
-        cc.LayerColor.prototype.ctor.call(this, cc.color(0, 0, 0, opacity || 192));
-        this.setCascadeOpacityEnabled(true);
+        cc.LayerColor.prototype.ctor.call(this, cc.color(0, 0, 0, opacity || 216));
+        this.setCascadeOpacityEnabled(false);
         this._titles = titles; this._texts = texts;
 
         var titleLbl = new cc.LabelTTF(titles[0], 'Karla', stbdTitleFontSize);

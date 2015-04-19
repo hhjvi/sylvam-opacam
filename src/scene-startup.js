@@ -1,4 +1,4 @@
-var timeflowRates = [0, 100, 3, 6, 12, 30, 60];   // <- This is constant
+var timeflowRates = [0, 1, 3, 6, 12, 30, 60];   // <- This is constant
 var dblclickMinIntv = 500;  // In milliseconds
 so.StartupScene = cc.Scene.extend({
     _mapLayer: null,
@@ -25,8 +25,8 @@ so.StartupScene = cc.Scene.extend({
 
         // Let's rock!!
         cc.director.getScheduler().scheduleCallbackForTarget(this, this.step, 0.5);
-        //this.addChild(new so.Storyboard(so.stbdTitles_startup, so.stbdTexts_startup, 255));
-        //this.pause();
+        this.addChild(new so.Storyboard(so.stbdTitles_startup, so.stbdTexts_startup, 255), 99999999);
+        this.pause();
     },
     initControl: function () {
         var _parent = this;
@@ -389,7 +389,23 @@ so.StartupScene = cc.Scene.extend({
         }
     },
     // Called every half second.
+    _lightConeStbdShown: false,
+    _basCtrlStbdStepCnt: 6,
+    _spacecraftStbd1: false,
+    _spacecraftStbd2: false,
     step: function () {
+        if (!this._lightConeStbdShown) {
+            this._lightConeStbdShown = true;
+            this.addChild(new so.Storyboard(so.stbdTitles_lightCones, so.stbdTexts_lightCones), 99999999);
+            this.pause();
+        } else if (--this._basCtrlStbdStepCnt === 0) {
+            this.addChild(new so.Storyboard(so.stbdTitles_basCtrl, so.stbdTexts_basCtrl), 99999999);
+            this.pause();
+        } else if (!this._spacecraftStbd1 && this._cosmos.civils[0].devLevels[2] >= 1) {
+            this._spacecraftStbd1 = true;
+            this.addChild(new so.Storyboard(so.stbdTitles_crft1, so.stbdTexts_crft1), 99999999);
+            this.pause();
+        }
         for (var i = 0; i < timeflowRates[this._timeflowIdx]; i++) this._cosmos.tick();
         this.refreshDisp();
     }

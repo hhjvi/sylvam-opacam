@@ -132,12 +132,17 @@ so.Cosmos.randomBadge = function () {
 };
 
 so.Cosmos.initMap = function () {
-    // Generate 200 stars in the area of 1000 ly * 1000 ly
-    // Average distance between stars is about 1000 / sqrt(200) = ~70 ly.
-    for (var i = 0; i < 200; i++)
+    // Generate 200 stars in the area of 400 ly * 400 ly
+    // Average distance between stars is about 400 / sqrt(200) = ~28 ly.
+    for (var i = 0; i < 195; i++)
         this.solars.push(so.SolarSystem(
             this, so.Cosmos.randomStarName(), undefined,
-            Math.random() * 1000 - 500, Math.random() * 1000 - 500,
+            Math.random() * 400 - 200, Math.random() * 400 - 200,
+            Math.random() * 10 + 5, Math.floor(Math.random() * 4500) + 500));
+    for (var i = 196; i < 200; i++)
+        this.solars.push(so.SolarSystem(
+            this, so.Cosmos.randomStarName(), undefined,
+            Math.random() * 10 - 5, Math.random() * 10 - 5,
             Math.random() * 10 + 5, Math.floor(Math.random() * 4500) + 500));
 
     // Generate 30 civilizations.
