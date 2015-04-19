@@ -1,4 +1,4 @@
-var timeflowRates = [0, 1, 3, 6, 12, 30, 60];   // <- This is constant
+var timeflowRates = [0, 100, 3, 6, 12, 30, 60];   // <- This is constant
 var dblclickMinIntv = 500;  // In milliseconds
 so.StartupScene = cc.Scene.extend({
     _mapLayer: null,

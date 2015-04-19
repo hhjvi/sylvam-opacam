@@ -104,6 +104,9 @@ var randomLetter = function () {
 var randomInt = function (upperbound) {
     return Math.floor(Math.random() * upperbound);
 };
+var randomColour = function () {
+    return cc.color(randomInt(256), randomInt(256), randomInt(256));
+};
 so.Cosmos.randomStarName = function () {
     if (Math.random() <= 1 / 5) {
         return randomLetter() + randomLetter() + '-' + randomInt(1000);
@@ -127,6 +130,16 @@ so.Cosmos.initMap = function () {
             this, so.Cosmos.randomStarName(), undefined,
             Math.random() * 1000 - 500, Math.random() * 1000 - 500,
             Math.random() * 10 + 5, Math.floor(Math.random() * 4500) + 500));
+
+    // Generate 30 civilizations.
+    for (var i = 1; i <= 30; i++) {
+        this.civils[i] = so.Civilization('Civ ' + i, 'Ordinary', randomColour());
+        do {
+            this.civils[i].solars[0] = randomInt(200) + 1;
+        } while (this.solars[this.civils[i].solars[0]].civil !== -1);
+        this.solars[this.civils[i].solars[0]].civil = i;
+        this.civils[i].resource = this.solars[this.civils[i].solars[0]].resource;
+    }
 };
 
 so.Cosmos.destroySolarSys = function (solarIdx) {
