@@ -12,6 +12,7 @@ so.Flyer.tick = function (newlyReachedTmp) { return function () {
 
 so.Spacecraft = function (cosmos, civil, level, src, dest, callback, target) {
     var r = {
+        isSpacecraft: true,
         cosmos: cosmos,
         name: 'Shenzhou ' + (new Date()).getTime() % 10000,
         level: level,
@@ -32,7 +33,7 @@ so.Spacecraft = function (cosmos, civil, level, src, dest, callback, target) {
     return r;
 };
 
-so.Spacecraft.speed = [undefined, 0.005, 0.015, 0.1, 1, 1];
+so.Spacecraft.speed = [0.1, 0.005, 0.015, 0.1, 1, 1];
 so.Spacecraft.warp = [undefined, undefined, undefined, undefined, 0.8, 0];
 so.Spacecraft.capacity = [undefined, 1500, 5000, 10000, 20000, 30000];
 
@@ -55,6 +56,7 @@ so.MassPoint = function (cosmos, civil, src, dest, callback, target) {
 
 so.DimDcrsr = function (cosmos, civil, src, dest) {
     var r = {
+        isDimDcrsr: true,
         cosmos: cosmos,
         speed: 1,
         civil: civil,

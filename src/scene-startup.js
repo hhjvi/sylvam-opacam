@@ -142,7 +142,7 @@ so.StartupScene = cc.Scene.extend({
     _solarNodes: [],
     _flyerNodes: [],
     initMap: function () {
-        this._cosmos = so.Cosmos();
+        this._cosmos = so.Cosmos(this.solarCrash, this.civilCrash, this);
         this._cosmos.initMap();
         var lcone = new so.Circle(1, cc.color(0, 0, 48));
         lcone.setPosition(cc.p(0, 0));
@@ -249,11 +249,9 @@ so.StartupScene = cc.Scene.extend({
         // Remove the flyer node. The flyer object will be removed by the cosmos class.
         this.removeFlyerNode(id);
     },
-    massPtArrive: function (id, civilName) {
+    massPtArrive: function (id) {
         this._notificator.addNotification(
             'A mass point reached its destination.', cc.color(192, 0, 0));
-        if (civilName) this._notificator.addNotification(
-            'Civilization [' + civilName + '] has been destroyed!', cc.color(192, 0, 0));
         var destSolarIdx = this._cosmos.flyers[id].destSolarIdx;
         var slrDisp = this._solarNodes[destSolarIdx];
         so.removeTooltip(this._mapLayer, slrDisp);
@@ -265,6 +263,15 @@ so.StartupScene = cc.Scene.extend({
         if (this._flyerNodes.length > 1)
             this._flyerNodes[id] = this._flyerNodes.pop();
         else this._flyerNodes = [];
+    },
+    solarCrash: function (solarIdx) {
+        so.removeTooltip(this._mapLayer, this._solarNodes[solarIdx]);
+        this._solarNodes[solarIdx].removeFromParent();
+    },
+    civilCrash: function (civilName) {
+        console.log('Civilization [' + civilName + '] has been destroyed!');
+        this._notificator.addNotification(
+            'Civilization [' + civilName + '] has been destroyed!', cc.color(192, 0, 0));
     },
 
     _timeflowIdx: 1,    // timeflowRates[_timeflowIdx] is 1x

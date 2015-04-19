@@ -75,6 +75,7 @@ so.refreshTooltip = function (host, node, pos, size, tooltip) {
 
 so.removeTooltip = function (host, node) {
     var idx = node._so_tooltipID;
+    if (!(idx in host._so_tooltips)) return;
     host._so_tooltips[idx].tooltip.removeFromParent();
     delete host._so_tooltips[idx];
 };
