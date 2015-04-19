@@ -140,6 +140,7 @@ so.StartupScene = cc.Scene.extend({
     _cosmos: null,
     _lcone: null,
     _solarNodes: [],
+    _flyerNodes: [],
     initMap: function () {
         this._cosmos = so.Cosmos();
         this._cosmos.initMap();
@@ -189,11 +190,20 @@ so.StartupScene = cc.Scene.extend({
     mapClick: function (p, idx) {
         if (this._idxToLaunch === -1) return;
         var selSolarIdx = this._mapLayer.clickableChild(idx).bindedSolarSys;
+        var selSolarSys = this._cosmos.solars[selSolarIdx];
         switch (this._idxToLaunch) {
         case 0: // Spacecraft
             if (idx === -1) return;
+            var sc = so.Spacecraft(0, this._cosmos.civils[0].devLevels[2],
+                cc.p(0, 0), cc.p(selSolarSys.x, selSolarSys.y), this.spacecraftArrive, this);
+            sc.id = this._cosmos.flyers.push(sc) - 1;
+            var scDisp = new so.Circle(8, cc.color.YELLOW);
+            scDisp.setPosition(this._mapLayer.at(0, 0));
+            this._mapLayer.addMapPoint(scDisp, 9999);
+            this._flyerNodes[sc.id] = scDisp;
             this._notificator.addNotification(
-                'Spacecraft sent to ' + this._cosmos.solars[selSolarIdx].name, cc.color(255, 255, 32));
+                'Spacecraft [' + sc.name + '] sent to ' + selSolarSys.name,
+                cc.color(255, 255, 96));
             break;
         case 1: // Mass Point
             if (idx === -1) return;
@@ -208,6 +218,21 @@ so.StartupScene = cc.Scene.extend({
         this._idxToLaunch = -1;
         this._launchMarker.setVisible(false);
     },
+    spacecraftArrive: function (id) {
+        this._notificator.addNotification(
+            '[' + this._cosmos.flyers[id].name + '] reached its destination.',
+            cc.color(255, 255, 96));
+        this._flyerNodes[id].removeFromParent();
+        if (this._flyerNodes.length > 1) {
+            this._cosmos.flyers[id] = this._cosmos.flyers.pop();
+            this._cosmos.flyers[id].id = id;
+            this._flyerNodes[id] = this._flyerNodes.pop();
+        } else {
+            this._cosmos.flyers = [];
+            this._flyerNodes = [];
+        }
+    },
+
     _timeflowIdx: 1,    // timeflowRates[_timeflowIdx] is 1x
     _lastTimeflowTapTime: 0,
     _lastTimeflowIdx: -1,   // The flow index before last pause
@@ -276,6 +301,11 @@ so.StartupScene = cc.Scene.extend({
         for (var i in so.res.launch)
             this._launcher._launchBtns[i]
                 .setVisible(cygnia.devLevels[2] >= so.launchRequirement[i]);
+        // Update the map
+        for (var i in this._cosmos.flyers) {
+            var f = this._cosmos.flyers[i];
+            this._flyerNodes[f.id].setPosition(this._mapLayer.at(f.x * so.ly2pix, f.y * so.ly2pix));
+        }
     },
     // Called every half second.
     step: function () {

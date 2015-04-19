@@ -63,5 +63,12 @@ so.MapLayer = cc.Layer.extend({
     },
     clickableChild: function (idx) {
         return this._clickableChildren[idx];
+    },
+    // Testing:
+    // m=cc.director.getRunningScene()._mapLayer; x=new so.Circle(5, cc.color.WHITE); m.addChild(x, 9999)
+    at: function (x, y) {
+        return cc.pAdd(
+            cc.pMult(cc.p(x - this._firstChildOrigPos.x, y - this._firstChildOrigPos.y), this._visScale),
+            this._mapChildren[0].getPosition());
     }
 });
