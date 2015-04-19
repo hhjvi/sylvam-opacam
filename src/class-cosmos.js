@@ -165,11 +165,7 @@ so.Cosmos.destroySolarSys = function (solarIdx) {
         } else {
             this.civils[targetCiv].solars = [];
         }
-    } else for (var i in this.civils[targetCiv].solars)
-        if (this.civils[targetCiv].solars[i] == solarIdx) {
-            this.civils[targetCiv].solars[i] = this.civils[targetCiv].solars.pop();
-            break;
-        }
+    } else so.arrayRemove(this.civils[targetCiv].solars, solarIdx);
     //if (targetCiv !== -1) console.log(this.civils[targetCiv].solars, solarIdx);
     this.solarDestroyCallback.call(this.callbackTarget, solarIdx);
     if (destroyedCivName)

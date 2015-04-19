@@ -293,9 +293,7 @@ so.StartupScene = cc.Scene.extend({
     },
     removeFlyerNode: function (id) {
         this._flyerNodes[id].removeFromParent();
-        if (this._flyerNodes.length > 1)
-            this._flyerNodes[id] = this._flyerNodes.pop();
-        else this._flyerNodes = [];
+        so.arrayRemove(this._flyerNodes, this._flyerNodes[id]);
     },
     solarCrash: function (solarIdx) {
         so.removeTooltip(this._mapLayer, this._solarNodes[solarIdx]);
