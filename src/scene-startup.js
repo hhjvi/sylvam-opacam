@@ -25,8 +25,8 @@ so.StartupScene = cc.Scene.extend({
 
         // Let's rock!!
         cc.director.getScheduler().scheduleCallbackForTarget(this, this.step, 0.5);
-        this.addChild(new so.Storyboard(so.stbdTitles_startup, so.stbdTexts_startup, 255));
-        this.pause();
+        //this.addChild(new so.Storyboard(so.stbdTitles_startup, so.stbdTexts_startup, 255));
+        //this.pause();
     },
     initControl: function () {
         var _parent = this;

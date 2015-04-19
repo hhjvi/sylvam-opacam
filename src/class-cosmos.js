@@ -26,6 +26,7 @@ so.Cosmos = function (solarDestroyCallback, civDestroyCallback, callbackTarget) 
 
     r.initMap = so.Cosmos.initMap;
     r.tick = so.Cosmos.tick;
+    r.tick_AI = so.Cosmos.tick_AI;
     r.destroySolarSys = so.Cosmos.destroySolarSys;
 
     return r;
@@ -95,6 +96,8 @@ so.Cosmos.tick = function () {
         d.tick = function () { this.radius += 1 / 12; };
         this.dimDcrsrs.push(d);
     }
+
+    this.tick_AI();
 };
 
 var randomLetter = function () {
