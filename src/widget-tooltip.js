@@ -14,7 +14,7 @@ so.Tooltip = cc.Node.extend({
         this.addChild(painter, 0);
         var maxWidth = 0;
         for (var i = 0; i < texts.length / 2; i++) {
-            var label = new cc.LabelTTF(texts[i + i], 'Arial', tooltipTextSize);
+            var label = new cc.LabelTTF(texts[i + i], 'Karla', tooltipTextSize);
             label.setColor(texts[i + i + 1]);
             label.setAnchorPoint(cc.p(0, 0.5));
             label.setPosition(cc.p(tooltipPaddingR, (1 - (i + i + 1) / texts.length) * size.height));
