@@ -161,7 +161,7 @@ so.StartupScene = cc.Scene.extend({
         this._scale.dispScale(this._mapScale * so.ly2pix);
     },
     mapClick: function (p) {
-        console.log(p);
+        //console.log(p);
     },
     _timeflowIdx: 1,    // timeflowRates[_timeflowIdx] is 1x
     _lastTimeflowTapTime: 0,
@@ -219,6 +219,11 @@ so.StartupScene = cc.Scene.extend({
         this._devBar.setCapacity(so.balanceBase + cygnia.devLevelsTot);
         for (var i in dcpItems)
             this._devPanel.updateLevelLabel(i, cygnia.devLevels[i], cygnia.upgradeProgress[i]);
+        // Check the availability of those unconventional weapons.
+        // 2 is the index of Basic Science Dev. Level.
+        for (var i in so.res.launch)
+            this._launcher._launchBtns[i]
+                .setVisible(cygnia.devLevels[2] >= so.launchRequirement[i]);
     },
     // Called every half second.
     step: function () {

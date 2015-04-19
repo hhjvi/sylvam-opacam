@@ -23,6 +23,7 @@ so.Launcher = cc.Node.extend({
             lchBtn.setAnchorPoint(cc.p(1, 1));
             lchBtn.setPosition(cc.p(size.width - lchrBtnWidth * i, size.height));
             lchBtn.setScale(0.5);
+            lchBtn.setVisible(false);
             menu.addChild(lchBtn, 0, parseInt(i));
             this._launchBtns[i] = lchBtn;
         }

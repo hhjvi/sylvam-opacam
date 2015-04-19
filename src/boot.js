@@ -30,6 +30,14 @@ so.ly2pix = 100;    // By default, 100 pixels = 1 light year
 so.balanceBase = 5; // The balance point is (5 + sum of all levels)
 so.resourceSeed = 10000;
 
+// Basic Science Dev. Levels required by each launchable object
+so.launchRequirement = [
+    2,  // Nuclear-powered / Warp-driven spacecrafts
+    4,  // Mass Points
+    5,  // Dimension Attack: 3D->2D
+    6   // Dimension Attack: 2D->1D
+];
+
 cc.game.onStart = function () {
     cc.view.adjustViewPort(true);
     cc.view.setDesignResolutionSize(640, 320, cc.ResolutionPolicy.SHOW_ALL);
