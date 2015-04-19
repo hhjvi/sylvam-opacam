@@ -33,13 +33,11 @@ so.Civilization = function () {
 };
 
 so.Civilization.levelRequirement = function (i, lv) {
-    // It's easier to upgrade energy levels.
-    if (i === 0) return (50 * lv + 450) * lv;
-    else return (250 * lv + 750) * lv;
+    return (250 * lv + 750) * lv;
 };
 so.Civilization.energyCoefficient = function () {
-    // When you get 2500 pts in energy, you get a 10% discount. And that's it.
-    return 4500 / (this.devPoints[0] + 4500);
+    // When you get 5000 pts in energy, you get a 10% discount. And that's it.
+    return 45000 / (this.devPoints[0] + 45000);
 };
 so.Civilization.energyUpgradeBonus = function () {
     return 500 * this.devLevels[0];
