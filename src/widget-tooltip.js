@@ -72,3 +72,9 @@ so.refreshTooltip = function (host, node, pos, size, tooltip) {
     host._so_tooltips[idx].tooltip = tooltip;
     host._so_tooltipLayer.addChild(tooltip);
 };
+
+so.removeTooltip = function (host, node) {
+    var idx = node._so_tooltipID;
+    host._so_tooltips[idx].tooltip.removeFromParent();
+    host._so_tooltips[idx] = undefined;
+};

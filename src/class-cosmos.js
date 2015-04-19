@@ -4,7 +4,8 @@ so.Cosmos = function () {
         solars: [],
         civils: [],
         flyers: [],
-        _newlyReached: []
+        _newlyReachedSpccrafts: [],
+        _newlyReachedMassPts: []
     };
     r.solars[0] = so.SolarSystem(r, 'Nova Terra', cc.color(128, 192, 255), 0, 0, 10);
     r.solars[0].civil = 0;
@@ -22,8 +23,8 @@ so.Cosmos.tick = function () {
     this.monCnt++;
     for (var i in this.civils) this.civils[i].tick();
     for (var i in this.flyers) this.flyers[i].tick();
-    while (this._newlyReached.length > 0) {
-        var f = this._newlyReached.pop();
+    while (this._newlyReachedSpccrafts.length > 0) {
+        var f = this._newlyReachedSpccrafts.pop();
         if (this.solars[f.destSolarIdx].civil === -1) {
             this.solars[f.destSolarIdx].civil = f.civil;
             this.civils[f.civil].resource += this.solars[f.destSolarIdx].resource;
@@ -34,6 +35,28 @@ so.Cosmos.tick = function () {
         else {
             this.flyers[f.id] = this.flyers.pop();
             this.flyers[f.id].id = f.id;
+        }
+    }
+    while (this._newlyReachedMassPts.length > 0) {
+        var m = this._newlyReachedMassPts.pop();
+        var targetCiv = this.solars[m.destSolarIdx].civil, destroyedCiv;
+        delete this.solars[m.destSolarIdx];
+        if (targetCiv === -1) { // Do nothing. Just destroyed a solar system.
+        } else if (this.civils[targetCiv].solars.length === 1) {
+            // Civilization destroyed!!
+            destroyedCiv = this.civils[targetCiv].name;
+            delete this.civils[targetCiv];
+        } else for (var i in this.civils[targetCiv].solars)
+            if (this.civils[targetCiv].solars[i] === m.destSolarIdx) {
+                this.civils[targetCiv].solars[i] = this.civils[targetCiv].solars.pop();
+                break;
+            }
+        // If targetCiv !== undefined then a civilization has been destroyed
+        m.callback.call(m.target, m.id, destroyedCiv);
+        if (this.flyers.length === 1) this.flyers = [];
+        else {
+            this.flyers[m.id] = this.flyers.pop();
+            this.flyers[m.id].id = f.id;
         }
     }
 };

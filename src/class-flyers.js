@@ -28,7 +28,7 @@ so.Spacecraft = function (cosmos, civil, level, src, dest, callback, target) {
         destSolarIdx: -1,   // Manual
         _lastWayToGo: 18906416
     };
-    r.tick = so.Flyer.tick(r.cosmos._newlyReached);
+    r.tick = so.Flyer.tick(r.cosmos._newlyReachedSpccrafts);
 
     return r;
 };
@@ -36,3 +36,20 @@ so.Spacecraft = function (cosmos, civil, level, src, dest, callback, target) {
 so.Spacecraft.speed = [undefined, 0.005, 0.015, 0.1, 1, 1];
 so.Spacecraft.warp = [undefined, undefined, undefined, undefined, 0.8, 0];
 so.Spacecraft.capacity = [undefined, 1500, 5000, 10000, 20000, 30000];
+
+so.MassPoint = function (cosmos, civil, src, dest, callback, target) {
+    var r = {
+        cosmos: cosmos,
+        speed: 1,   // Mass Points travels as fast as light, and uses the fact that Ek = 1/2(m*v^2)
+        civil: civil,
+        x: src.x, y: src.y,
+        destx: dest.x, desty: dest.y,
+        callback: callback, target: target,
+        id: 0,  // Give it an ID manually
+        destSolarIdx: -1,   // Manual
+        _lastWayToGo: 18906416
+    };
+    r.tick = so.Flyer.tick(r.cosmos._newlyReachedMassPts);
+
+    return r;
+};

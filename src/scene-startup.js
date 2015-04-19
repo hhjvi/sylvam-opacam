@@ -209,8 +209,16 @@ so.StartupScene = cc.Scene.extend({
             break;
         case 1: // Mass Point
             if (idx === -1) return;
+            var mp = so.MassPoint(this._cosmos, 0,
+                cc.p(0, 0), cc.p(selSolarSys.x, selSolarSys.y), this.massPtArrive, this);
+            mp.id = this._cosmos.flyers.push(mp) - 1;
+            mp.destSolarIdx = selSolarIdx;
+            var mpDisp = new so.Circle(2, cc.color(192, 0, 0));
+            mpDisp.setPosition(this._mapLayer.at(0, 0));
+            this._mapLayer.addMapPoint(mpDisp, 9999);
+            this._flyerNodes[mp.id] = mpDisp;
             this._notificator.addNotification(
-                'Mass Point sent to ' + this._cosmos.solars[selSolarIdx].name, cc.color(255, 32, 32));
+                'Mass Point sent to ' + selSolarSys.name, cc.color(192, 0, 0));
             break;
         case 2: // 3->2 Dimension Attack
             break;
@@ -224,13 +232,27 @@ so.StartupScene = cc.Scene.extend({
         this._notificator.addNotification(
             '[' + this._cosmos.flyers[id].name + '] reached its destination.',
             cc.color(255, 255, 96));
-        this._flyerNodes[id].removeFromParent();
         var destSolarIdx = this._cosmos.flyers[id].destSolarIdx;
         var slrDisp = this._solarNodes[destSolarIdx];
         so.refreshTooltip(this._mapLayer, slrDisp,
             slrDisp.getBLCorner(), slrDisp.getCircleSize(),
             this._cosmos.solars[destSolarIdx].getTooltip());
         // Remove the flyer node. The flyer object will be removed by the cosmos class.
+        this.removeFlyerNode(id);
+    },
+    massPtArrive: function (id, civilName) {
+        this._notificator.addNotification(
+            'A mass point reached its destination.', cc.color(192, 0, 0));
+        if (civilName) this._notificator.addNotification(
+            'Civilization [' + civilName + '] has been destroyed!', cc.color(192, 0, 0));
+        var destSolarIdx = this._cosmos.flyers[id].destSolarIdx;
+        var slrDisp = this._solarNodes[destSolarIdx];
+        so.removeTooltip(this._mapLayer, slrDisp);
+        slrDisp.removeFromParent();
+        this.removeFlyerNode(id);
+    },
+    removeFlyerNode: function (id) {
+        this._flyerNodes[id].removeFromParent();
         if (this._flyerNodes.length > 1)
             this._flyerNodes[id] = this._flyerNodes.pop();
         else this._flyerNodes = [];
