@@ -73,8 +73,8 @@ so.Cosmos.tick = function () {
         f.callback.call(f.target, f.id);
         if (this.flyers.length === 1) this.flyers = [];
         else {
-            this.flyers[f.id] = this.flyers.pop();
-            this.flyers[f.id].id = f.id;
+            so.arrayRemove(this.flyers, this.flyers[f.id]);
+            if (this.flyers.length > f.id) this.flyers[f.id].id = f.id;
         }
     }
     while (this._newlyReachedMassPts.length > 0) {
@@ -84,8 +84,8 @@ so.Cosmos.tick = function () {
         m.callback.call(m.target, m.id);
         if (this.flyers.length === 1) this.flyers = [];
         else {
-            this.flyers[m.id] = this.flyers.pop();
-            this.flyers[m.id].id = m.id;
+            so.arrayRemove(this.flyers, this.flyers[m.id]);
+            if (this.flyers.length > f.id) this.flyers[m.id].id = id;
         }
     }
     while (this._newlyReachedDimDcrsrs.length > 0) {
