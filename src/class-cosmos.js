@@ -4,9 +4,9 @@ so.Cosmos = function () {
         solars: [],
         civils: []
     };
-    r.solars[0] = so.SolarSystem('Cygnia', cc.color(128, 192, 255), 0, 0, 10);
+    r.solars[0] = so.SolarSystem('Nova Terra', cc.color(128, 192, 255), 0, 0, 10);
     r.solars[0].civil = 0;
-    r.civils[0] = so.Civilization();
+    r.civils[0] = so.Civilization('Cygnia', 'Player');
     r.civils[0].solar = 0;
     r.civils[0].resource = so.resourceSeed;
 

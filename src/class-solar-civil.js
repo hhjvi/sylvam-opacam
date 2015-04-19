@@ -11,8 +11,10 @@ so.SolarSystem = function (name, colour, x, y, radius, res) {
     return r;
 };
 
-so.Civilization = function () {
+so.Civilization = function (name, badge) {
     var r = {
+        name: name || 'Mysteria',
+        badge: badge || 'Ordinary',
         solar: -1,
         resource: 0,
         devPace: {}, devPaceTot: 0,
