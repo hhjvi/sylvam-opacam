@@ -21,7 +21,16 @@ so.MapLayer = cc.Layer.extend({
     addMapRegion: function (child) {
         this._mapRegions.push(child);
         this.addMapPoint(child);
+        child._so_isMapRegion = true;
     },
+    convertToMapRegion: function (child, cleanup) {
+        if (!child._so_isMapRegion && this._mapRegions.indexOf(child) === -1) {
+            this._mapRegions.push(child);
+            child.setScale(child.getScale() * this._visScale);
+            child._so_isMapRegion = true;
+        }
+    },
+
     getVisibleCentre: function () {
         return cc.p(this._visCentX, this._visCentY);
     },

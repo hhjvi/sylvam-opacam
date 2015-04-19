@@ -346,6 +346,7 @@ so.StartupScene = cc.Scene.extend({
             this._flyerNodes[f.id].setPosition(this._mapLayer.at(f.x * so.ly2pix, f.y * so.ly2pix));
             if (f.radius) {
                 // A Dimension Decreaser OwO
+                this._mapLayer.convertToMapRegion(this._flyerNodes[f.id]);
                 this._flyerNodes[f.id].setRadius(f.radius * so.ly2pix);
             }
         }
