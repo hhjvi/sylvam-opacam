@@ -11,8 +11,7 @@ so.res = {
     launch: [
         ['res/launch-spccraft.png', 'res/launch-spccraft-sel.png'],
         ['res/launch-masspt.png', 'res/launch-masspt-sel.png'],
-        ['res/launch-2datk.png', 'res/launch-2datk-sel.png'],
-        ['res/launch-1datk.png', 'res/launch-1datk-sel.png']
+        ['res/launch-2datk.png', 'res/launch-2datk-sel.png']
     ]
 };
 so.res_preload = [
@@ -23,8 +22,7 @@ so.res_preload = [
     so.res.down_btn, so.res.down_btn_sel,
     so.res.launch[0][0], so.res.launch[0][1],
     so.res.launch[1][0], so.res.launch[1][1],
-    so.res.launch[2][0], so.res.launch[2][1],
-    so.res.launch[3][0], so.res.launch[3][1]
+    so.res.launch[2][0], so.res.launch[2][1]
 ];
 so.size = cc.size(0, 0);
 so.centre = cc.p(0, 0);
