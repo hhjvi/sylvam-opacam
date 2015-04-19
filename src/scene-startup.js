@@ -183,11 +183,13 @@ so.StartupScene = cc.Scene.extend({
             this._launchMarker.setVisible(false);
         } else {
             this._idxToLaunch = idx;
-            this._notificator.addNotification('Select your destination, click again to cancel');
+            this._notificator.addNotification('Select your starting point, click again to cancel');
             this._launchMarker.setVisible(true);
             this._launchMarker.setPosition(this._launcher.getLaunchButtonCentre(idx));
+            this._selectedSrc = null;
         }
     },
+    _selectedSrc: null,
     mapClick: function (p, idx) {
         if (this._idxToLaunch === -1) return;
         var selSolarIdx, selSolarSys;
@@ -198,41 +200,69 @@ so.StartupScene = cc.Scene.extend({
         switch (this._idxToLaunch) {
         case 0: // Spacecraft
             if (idx === -1) return;
+            if (!this._selectedSrc) {
+                if (selSolarSys.civil === 0) {
+                    this._selectedSrc = cc.pMult(p, 1 / so.ly2pix);
+                    this._notificator.addNotification('Select your destination');
+                }
+                return;
+            }
+            console.log(this._selectedSrc);
             var sc = so.Spacecraft(this._cosmos, 0, this._cosmos.civils[0].devLevels[2],
-                cc.p(0, 0), cc.p(selSolarSys.x, selSolarSys.y), this.spacecraftArrive, this);
+                this._selectedSrc, cc.p(selSolarSys.x, selSolarSys.y), this.spacecraftArrive, this);
             sc.id = this._cosmos.flyers.push(sc) - 1;
             sc.destSolarIdx = selSolarIdx;
             var scDisp = new so.Circle(8, cc.color.YELLOW);
-            scDisp.setPosition(this._mapLayer.at(0, 0));
+            scDisp.setPosition(
+                this._mapLayer.at(this._selectedSrc.x * so.ly2pix),
+                this._mapLayer.at(this._selectedSrc.y * so.ly2pix));
             this._mapLayer.addMapPoint(scDisp, 9999);
             this._flyerNodes[sc.id] = scDisp;
             this._notificator.addNotification(
                 'Spacecraft [' + sc.name + '] sent to ' + selSolarSys.name,
                 cc.color(255, 255, 96));
-            break;
+            this._selectedSrc = null; break;
         case 1: // Mass Point
             if (idx === -1) return;
+            if (!this._selectedSrc) {
+                if (selSolarSys.civil === 0) {
+                    this._selectedSrc = cc.pMult(p, 1 / so.ly2pix);
+                    this._notificator.addNotification('Select your destination');
+                }
+                return;
+            }
             var mp = so.MassPoint(this._cosmos, 0,
-                cc.p(0, 0), cc.p(selSolarSys.x, selSolarSys.y), this.massPtArrive, this);
+                this._selectedSrc, cc.p(selSolarSys.x, selSolarSys.y), this.massPtArrive, this);
             mp.id = this._cosmos.flyers.push(mp) - 1;
             mp.destSolarIdx = selSolarIdx;
             var mpDisp = new so.Circle(2, cc.color(192, 0, 0));
-            mpDisp.setPosition(this._mapLayer.at(0, 0));
+            mpDisp.setPosition(
+                this._mapLayer.at(this._selectedSrc.x * so.ly2pix),
+                this._mapLayer.at(this._selectedSrc.y * so.ly2pix));
             this._mapLayer.addMapPoint(mpDisp, 9999);
             this._flyerNodes[mp.id] = mpDisp;
             this._notificator.addNotification(
                 'Mass Point sent to ' + selSolarSys.name, cc.color(192, 0, 0));
-            break;
+            this._selectedSrc = null; break;
         case 2: // 3->2 Dimension Decreaser
+            if (!this._selectedSrc) {
+                if (idx !== -1 && selSolarSys.civil === 0) {
+                    this._selectedSrc = cc.pMult(p, 1 / so.ly2pix);
+                    this._notificator.addNotification('Select your destination');
+                }
+                return;
+            }
             var dc = so.DimDcrsr(this._cosmos, 0,
-                cc.p(0, 0), cc.p(p.x / so.ly2pix, p.y / so.ly2pix));
+                this._selectedSrc, cc.p(p.x / so.ly2pix, p.y / so.ly2pix));
             dc.id = this._cosmos.flyers.push(dc) - 1;
             var dcDisp = new so.Circle(2, cc.color(64, 0, 192));
-            dcDisp.setPosition(this._mapLayer.at(0, 0));
+            dcDisp.setPosition(
+                this._mapLayer.at(this._selectedSrc.x * so.ly2pix),
+                this._mapLayer.at(this._selectedSrc.y * so.ly2pix));
             this._mapLayer.addMapPoint(dcDisp, 9999);
             this._flyerNodes[dc.id] = dcDisp;
             this._notificator.addNotification('Dimension Decreaser sent', cc.color(64, 0, 192));
-            break;
+            this._selectedSrc = null; break;
         }
         this._idxToLaunch = -1;
         this._launchMarker.setVisible(false);
