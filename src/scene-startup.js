@@ -264,6 +264,13 @@ so.StartupScene = cc.Scene.extend({
         this._devBar.setCapacity(so.balanceBase + cygnia.devLevelsTot);
         for (var i in dcpItems)
             this._devPanel.updateLevelLabel(i, cygnia.devLevels[i], cygnia.upgradeProgress[i]);
+        // Display level up messages
+        while (cygnia.lastLevelUp.length > 0) {
+            var upIdx = cygnia.lastLevelUp.pop();
+            this._notificator.addNotification(
+                dcpItems[upIdx][1] + ' upgraded to level ' + cygnia.devLevels[upIdx],
+                dcpItems[upIdx][2]);
+        }
         // Check the availability of those unconventional weapons.
         // 2 is the index of Basic Science Dev. Level.
         for (var i in so.res.launch)

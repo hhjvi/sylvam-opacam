@@ -18,7 +18,7 @@ so.Civilization = function (name, badge) {
         solar: -1,
         resource: 0,
         devPace: {}, devPaceTot: 0,
-        devPoints: {}, upgradeProgress: [],
+        devPoints: {},
         devLevels: {}, devLevelsTot: 0,
         stability: 100
     };
@@ -30,6 +30,11 @@ so.Civilization = function (name, badge) {
     r.energyCoefficient = so.Civilization.energyCoefficient;
     r.energyUpgradeBonus = so.Civilization.energyUpgradeBonus;
     r.tick = so.Civilization.tick;
+
+    if (badge === 'Player') {
+        r.lastLevelUp = [], r.upgradeProgress = [];
+        r.tick = so.Civilization.tickForPlayer;
+    }
 
     return r;
 };
@@ -53,6 +58,23 @@ so.Civilization.tick = function () {
     // Let's develop!
     for (var i in dcpItems) {
         this.devPoints[i] += this.devPace[i] * 5;
+        var nextReq = this.levelRequirement(i, this.devLevels[i] + 1);
+        if (this.devPoints[i] >= nextReq) {
+            this.devLevels[i]++; this.devLevelsTot++;
+            // If the energy dev. level is going up, we get some resources
+            // Since i is a string ('0'), use == instead of ===
+            if (i == 0) this.resource += this.energyUpgradeBonus();
+        }
+    }
+};
+// Record more information for displaying.
+so.Civilization.tickForPlayer = function () {
+    this.resource -= (10 + 5 * this.devPaceTot) * this.energyCoefficient();
+    this.stability += (so.balanceBase + this.devLevelsTot - this.devPaceTot) * 0.1;
+    if (this.stability > 100) this.stability = 100;
+    // Let's develop!
+    for (var i in dcpItems) {
+        this.devPoints[i] += this.devPace[i] * 5;
         var lastReq = this.levelRequirement(i, this.devLevels[i]),
             nextReq = this.levelRequirement(i, this.devLevels[i] + 1);
         if (this.devPoints[i] >= nextReq) {
@@ -60,6 +82,7 @@ so.Civilization.tick = function () {
             // Update for calculating upgrade progress
             lastReq = nextReq;
             nextReq = this.levelRequirement(i, this.devLevels[i] + 1);
+            this.lastLevelUp.push(i);
             // If the energy dev. level is going up, we get some resources
             // Since i is a string ('0'), use == instead of ===
             if (i == 0) this.resource += this.energyUpgradeBonus();
