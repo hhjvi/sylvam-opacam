@@ -34,9 +34,9 @@ so.resourceSeed = 10000;
 
 // Basic Science Dev. Levels required by each launchable object
 so.launchRequirement = [
-    0,  // Fuel/Nuclear-powered / Warp-driven spacecrafts
-    0,  // Mass Points
-    0   // Dimension Attack: 3D->2D
+    1,  // Fuel/Nuclear-powered / Warp-driven spacecrafts
+    4,  // Mass Points
+    5   // Dimension Attack: 3D->2D
 ];
 
 cc.game.onStart = function () {

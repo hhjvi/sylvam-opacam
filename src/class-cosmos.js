@@ -97,11 +97,36 @@ so.Cosmos.tick = function () {
     }
 };
 
+var randomLetter = function () {
+    return String.fromCharCode(Math.floor(Math.random() * 26) + 65);
+};
+// Gives a random integer in [0, upperbound).
+var randomInt = function (upperbound) {
+    return Math.floor(Math.random() * upperbound);
+};
+so.Cosmos.randomStarName = function () {
+    if (Math.random() <= 1 / 5) {
+        return randomLetter() + randomLetter() + '-' + randomInt(1000);
+    } else if (Math.random() <= 1 / 4) {
+        return randomLetter() + randomLetter().toLowerCase() +
+            randomLetter().toLowerCase() + randomInt(20);
+    } else if (Math.random() <= 1 / 3) {
+        return randomLetter() + randomInt(100) + '-' + randomLetter().toLowerCase();
+    } else if (Math.random() <= 1 / 2) {
+        return 'K' + (randomInt(8000) + 2000);
+    } else {
+        return randomLetter().toLowerCase() + '-' + randomInt(50) + '-' + randomInt(10);
+    }
+};
+
 so.Cosmos.initMap = function () {
-    for (var i = 0; i < 10; i++)
+    // Generate 200 stars in the area of 1000 ly * 1000 ly
+    // Average distance between stars is about 1000 / sqrt(200) = ~70 ly.
+    for (var i = 0; i < 200; i++)
         this.solars.push(so.SolarSystem(
-            this, 'Solar System ' + i, undefined,
-            (40 * i - 140) / so.ly2pix, (15 * i - 88) / so.ly2pix, i + 5, i * 10));
+            this, so.Cosmos.randomStarName(), undefined,
+            Math.random() * 1000 - 500, Math.random() * 1000 - 500,
+            Math.random() * 10 + 5, Math.floor(Math.random() * 4500) + 500));
 };
 
 so.Cosmos.destroySolarSys = function (solarIdx) {
