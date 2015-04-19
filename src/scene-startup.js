@@ -143,10 +143,11 @@ so.StartupScene = cc.Scene.extend({
             var slrDisp = new so.Circle(s.radius, s.colour);
             slrDisp.setPosition(cc.p(s.x * so.ly2pix, s.y * so.ly2pix));
             slrDisp.setVisible(false);
-            this._mapLayer.addMapPoint(slrDisp);
+            this._mapLayer.addMapPoint(slrDisp, true);  // Can be selected as a fixed point
             var tt = new so.Tooltip([s.name, s.colour, 'Res. ' + s.resource, cc.color.WHITE]);
             so.putTooltip(this._mapLayer, slrDisp,
                 slrDisp.getBLCorner(), slrDisp.getCircleSize(), tt);
+            slrDisp.bindedSolarSys = i;
             this._solarNodes[i] = slrDisp;
         }
     },
@@ -170,10 +171,15 @@ so.StartupScene = cc.Scene.extend({
             // TODO: Send a notification
         }
     },
-    mapClick: function (p) {
+    mapClick: function (p, idx) {
+        console.log(p, idx);
         if (this._idxToLaunch >= 0) switch (this._idxToLaunch) {
         case 0: // Spacecraft
-            console.log('Send a spacecraft to (' + p.x + ', ' + p.y + ')');
+            if (idx === -1) return;
+            var selSolarIdx = this._mapLayer.clickableChild(idx).bindedSolarSys;
+            console.log('Send a spacecraft to ' +
+                this._cosmos.solars[selSolarIdx].name + ' [' +
+                selSolarIdx + ']');
             break;
         case 1: // Mass Point
             console.log('Send a mass point to (' + p.x + ', ' + p.y + ')');
