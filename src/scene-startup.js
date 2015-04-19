@@ -21,7 +21,6 @@ so.StartupScene = cc.Scene.extend({
 
         this.initControl();
         this.initMap();
-        this.initGameplay();
         
         // Let's rock!!
         cc.director.getScheduler().scheduleCallbackForTarget(this, this.step, 0.5);
@@ -120,35 +119,27 @@ so.StartupScene = cc.Scene.extend({
         this._launcher = lchr;
         window.l = lchr;
     },
-    _player: null,
+    _cosmos: null,
     _lcone: null,
-    _solarSys: [],
+    _solarNodes: [],
     initMap: function () {
-        var player = new so.Circle(10, cc.color(128, 192, 255));
-        player.setPosition(cc.p(0, 0));
-        this._mapLayer.addMapPoint(player, 10);
-        var playerTooltip = new so.Tooltip(['Cygnia', cc.color(128, 192, 255), 'Player', cc.color.BLACK]);
-        so.putTooltip(this._mapLayer, player, player.getBLCorner(), player.getCircleSize(), playerTooltip);
-        this._player = player;
+        this._cosmos = so.Cosmos();
+        this._cosmos.initMap();
         var lcone = new so.Circle(1, cc.color(0, 0, 48));
         lcone.setPosition(cc.p(0, 0));
         this._mapLayer.addMapRegion(lcone, 0);
         this._lcone = lcone;
-        for (var i = 0; i < 10; i++) {
-            var s = new so.Circle(i, cc.color(255, 64, 0));
-            s.setPosition(cc.p(40 * i - 140, 15 * i - 88));
-            s.setVisible(false);
-            this._mapLayer.addMapPoint(s);
-            var tt = new so.Tooltip(['Solar #' + i, cc.color(255, 64, 0), 'Ordinary', cc.color.WHITE]);
-            so.putTooltip(this._mapLayer, s, s.getBLCorner(), s.getCircleSize(), tt);
-            this._solarSys.push({
-                x: (40 * i - 140) / so.ly2pix, y: (15 * i - 88) / so.ly2pix, node: s
-            });
-        }
-        for (var i in this._solarSys) {
-            this._solarSys[i].distSq =
-                this._solarSys[i].x * this._solarSys[i].x +
-                this._solarSys[i].y * this._solarSys[i].y;
+
+        for (var i in this._cosmos.solars) {
+            var s = this._cosmos.solars[i];
+            var slrDisp = new so.Circle(s.radius, s.colour);
+            slrDisp.setPosition(cc.p(s.x * so.ly2pix, s.y * so.ly2pix));
+            slrDisp.setVisible(false);
+            this._mapLayer.addMapPoint(slrDisp);
+            var tt = new so.Tooltip([s.name, s.colour, 'Res. ' + s.resource, cc.color.WHITE]);
+            so.putTooltip(this._mapLayer, slrDisp,
+                slrDisp.getBLCorner(), slrDisp.getCircleSize(), tt);
+            this._solarNodes[i] = slrDisp;
         }
     },
 
@@ -184,90 +175,45 @@ so.StartupScene = cc.Scene.extend({
         else
             this._timeflowDisp.setString('x' + timeflowRates[this._timeflowIdx].toString());
     },
-    _devPace: {},
-    _devPaceTot: 0,
     adjustDevPace: function (dev) {
-        var c = [];
-        this._devPaceTot = 0;
+        var c = [], dptot = 0;
         for (var i in dcpItems) {
             var n = dev[dcpItems[i][0]];
             c.push({num: n, colour: dcpItems[i][2]});
-            this._devPaceTot += n;
-            this._devPace[i] = n;
+            dptot += n;
+            this._cosmos.civils[0].devPace[i] = n;
         }
         this._devBar.setContents(c);
+        this._cosmos.civils[0].devPaceTot = dptot;
     },
 
-    _monCnt: 0,
-    _lconeRadius: 0,
-    _resource: so.resourceSeed,
-    _devPoints: {},
-    _devLevels: {}, _devLevelsTot: 0,
-    _stability: 100,
-    // Initializes player-related data.
-    initGameplay: function () {
-        for (var i in dcpItems)
-            this._devPace[i] = this._devLevels[i] = this._devPoints[i] = 0;
-    },
-    levelRequirement: function (i, lv) {
-        // It's easier to upgrade energy levels.
-        if (i === 0) return (50 * lv + 450) * lv;
-        else return (250 * lv + 750) * lv;
-    },
-    energyCoefficient: function () {
-        // When you get 2500 pts in energy, you get a 10% discount. And that's it.
-        return 4500 / (this._devPoints[0] + 4500);
-    },
-    energyUpgradeBonus: function () {
-        return 500 * this._devLevels[0];
-    },
-    // One tick is 1 month.
-    tick: function () {
-        this._monCnt++;
-        this._lconeRadius += 1 / 12;
-        this._resource -= (10 + 5 * this._devPaceTot) * this.energyCoefficient();
-        this._stability += (so.balanceBase + this._devLevelsTot - this._devPaceTot) * 0.1;
-        if (this._stability > 100) this._stability = 100;
-        // Let's develop!
-        for (var i in dcpItems) {
-            this._devPoints[i] += this._devPace[i] * 5;
-            var lastReq = this.levelRequirement(i, this._devLevels[i]),
-                nextReq = this.levelRequirement(i, this._devLevels[i] + 1);
-            if (this._devPoints[i] >= nextReq) {
-                this._devLevels[i]++; this._devLevelsTot++;
-                this._devBar.setCapacity(so.balanceBase + this._devLevelsTot);
-                // Update for displaying in the develop panel
-                lastReq = nextReq;
-                nextReq = this.levelRequirement(i, this._devLevels[i] + 1);
-                // If the energy dev. level is going up, we get some resources
-                // Since i is a string ('0'), use == instead of ===
-                if (i == 0) this._resource += this.energyUpgradeBonus();
-            }
-            this._devPanel.updateLevelLabel(i, this._devLevels[i],
-                (this._devPoints[i] - lastReq) / (nextReq - lastReq));
-        }
-    },
     refreshDisp: function () {
-        this._lcone.setScale(this._lconeRadius * this._mapScale * so.ly2pix);
-        var y = (this._monCnt - this._monCnt % 12) / 12, m = this._monCnt % 12;
+        var mon = this._cosmos.monCnt, lconeRad = mon / 12;
+        this._lcone.setScale(lconeRad * this._mapScale * so.ly2pix);
+        var y = (mon - mon % 12) / 12, mon = mon % 12;
         this._timeDisp.setString(
-            y.toString() + (y === 1 ? ' yr ' : ' yrs ') + m.toString() + ' mon');
-        for (var i in this._solarSys) {
-            this._solarSys[i].node.setVisible(
-                this._solarSys[i].distSq <= this._lconeRadius * this._lconeRadius);
+            y.toString() + (y === 1 ? ' yr ' : ' yrs ') + mon.toString() + ' mon');
+        for (var i in this._cosmos.solars) {
+            this._solarNodes[i].setVisible(
+                this._cosmos.solars[i].distToOrigSq <= lconeRad * lconeRad);
         }
-        var ss = (this._resource + 0.00625).toString();
+        var cygnia = this._cosmos.civils[0];
+        var ss = (cygnia.resource + 0.00625).toString();
         this._resDisp.setString('Res. ' + ss.substr(0, ss.lastIndexOf('.') + 2));
-        ss = (this._stability + 0.00625).toString();
+        ss = (cygnia.stability + 0.00625).toString();
         this._stbltDisp.setString('Stab. ' + ss.substr(0, ss.lastIndexOf('.') + 2));
-        if (this._stability >= 80) this._stbltDisp.setColor(cc.color.GREEN);
-        else if (this._stability >= 60) this._stbltDisp.setColor(cc.color.YELLOW);
-        else if (this._stability >= 40) this._stbltDisp.setColor(cc.color(255, 128, 0));
+        if (cygnia.stability >= 80) this._stbltDisp.setColor(cc.color.GREEN);
+        else if (cygnia.stability >= 60) this._stbltDisp.setColor(cc.color.YELLOW);
+        else if (cygnia.stability >= 40) this._stbltDisp.setColor(cc.color(255, 128, 0));
         else this._stbltDisp.setColor(cc.color.RED);
+        // Refresh level display in the panel
+        this._devBar.setCapacity(so.balanceBase + cygnia.devLevelsTot);
+        for (var i in dcpItems)
+            this._devPanel.updateLevelLabel(i, cygnia.devLevels[i], cygnia.upgradeProgress[i]);
     },
     // Called every half second.
     step: function () {
-        for (var i = 0; i < timeflowRates[this._timeflowIdx]; i++) this.tick();
+        for (var i = 0; i < timeflowRates[this._timeflowIdx]; i++) this._cosmos.tick();
         this.refreshDisp();
     }
 });
