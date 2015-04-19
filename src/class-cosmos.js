@@ -86,7 +86,7 @@ so.Cosmos.tick = function () {
         if (this.flyers.length === 1) this.flyers = [];
         else {
             so.arrayRemove(this.flyers, this.flyers[m.id]);
-            if (this.flyers.length > f.id) this.flyers[m.id].id = id;
+            if (this.flyers.length > m.id) this.flyers[m.id].id = m.id;
         }
     }
     while (this._newlyReachedDimDcrsrs.length > 0) {
@@ -124,6 +124,12 @@ so.Cosmos.randomStarName = function () {
         return randomLetter().toLowerCase() + '-' + randomInt(50) + '-' + randomInt(10);
     }
 };
+so.Cosmos.randomBadge = function () {
+    var x = Math.random();
+    if (x < 0.1) return 'Fire Lover';
+    else if (x < 0.2) return 'Optimist';
+    else return 'Ordinary';
+};
 
 so.Cosmos.initMap = function () {
     // Generate 200 stars in the area of 1000 ly * 1000 ly
@@ -136,7 +142,7 @@ so.Cosmos.initMap = function () {
 
     // Generate 30 civilizations.
     for (var i = 1; i <= 30; i++) {
-        this.civils[i] = so.Civilization('Civ ' + i, 'Ordinary', randomColour());
+        this.civils[i] = so.Civilization('Civ ' + i, so.Cosmos.randomBadge(), randomColour());
         do {
             this.civils[i].solars[0] = randomInt(200) + 1;
         } while (this.solars[this.civils[i].solars[0]].civil !== -1);
@@ -146,6 +152,7 @@ so.Cosmos.initMap = function () {
 };
 
 so.Cosmos.destroySolarSys = function (solarIdx) {
+    if (!this.solars[solarIdx]) return; // A strange patch...
     var targetCiv = this.solars[solarIdx].civil, destroyedCivName;
     delete this.solars[solarIdx];
     //if (targetCiv !== -1) console.log(this.civils[targetCiv].solars);

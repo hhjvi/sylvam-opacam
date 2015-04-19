@@ -1,4 +1,4 @@
-var timeflowRates = [0, 1, 3, 6, 12, 30, 60];   // <- This is constant
+var timeflowRates = [0, 100, 3, 6, 12, 30, 60];   // <- This is constant
 var dblclickMinIntv = 500;  // In milliseconds
 so.StartupScene = cc.Scene.extend({
     _mapLayer: null,
@@ -146,6 +146,7 @@ so.StartupScene = cc.Scene.extend({
     initMap: function () {
         this._cosmos = so.Cosmos(this.solarCrash, this.civilCrash, this);
         this._cosmos.initMap();
+        so.Cosmos.tick_AI.scene = this;
         var lcone = new so.Circle(1, cc.color(0, 0, 48));
         lcone.setPosition(cc.p(0, 0));
         this._mapLayer.addMapRegion(lcone, 0);
@@ -381,7 +382,6 @@ so.StartupScene = cc.Scene.extend({
         // Update the map
         for (var i in this._cosmos.flyers) {
             var f = this._cosmos.flyers[i];
-            if (!this._flyerNodes[f.id]) debugger;
             this._flyerNodes[f.id].setPosition(this._mapLayer.at(f.x * so.ly2pix, f.y * so.ly2pix));
             if (f.radius) {
                 // A Dimension Decreaser OwO
