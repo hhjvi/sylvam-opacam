@@ -5,9 +5,14 @@ so.Circle = cc.DrawNode.extend({
         this._radius = radius;
         this.drawDot(cc.p(0, 0), radius, colour);
     },
+    setColour: function (colour) {
+        this.clear();
+        this.drawDot(cc.p(0, 0), this._radius, colour);
+    },
     getBLCorner: function () {
         return cc.p(this._position.x - this._radius, this._position.y - this._radius);
     },
+    getRadius: function () { return this._radius; },
     getCircleSize: function () {
         return cc.size(this._radius * 2, this._radius * 2);
     }

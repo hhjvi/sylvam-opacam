@@ -155,10 +155,11 @@ so.StartupScene = cc.Scene.extend({
             slrDisp.setPosition(cc.p(s.x * so.ly2pix, s.y * so.ly2pix));
             slrDisp.setVisible(false);
             this._mapLayer.addMapPoint(slrDisp, true);  // Can be selected as a fixed point
-            var tt = new so.Tooltip([s.name, s.colour, 'Res. ' + s.resource, cc.color.WHITE]);
             so.putTooltip(this._mapLayer, slrDisp,
-                slrDisp.getBLCorner(), slrDisp.getCircleSize(), tt);
+                slrDisp.getBLCorner(), slrDisp.getCircleSize(), s.getTooltip());
             slrDisp.bindedSolarSys = i;
+            slrDisp.glow = new so.Circle(s.radius + 3, cc.color(0, 0, 0, 0));
+            slrDisp.addChild(slrDisp.glow, -1);
             this._solarNodes[i] = slrDisp;
         }
     },
@@ -194,9 +195,10 @@ so.StartupScene = cc.Scene.extend({
         switch (this._idxToLaunch) {
         case 0: // Spacecraft
             if (idx === -1) return;
-            var sc = so.Spacecraft(0, this._cosmos.civils[0].devLevels[2],
+            var sc = so.Spacecraft(this._cosmos, 0, this._cosmos.civils[0].devLevels[2],
                 cc.p(0, 0), cc.p(selSolarSys.x, selSolarSys.y), this.spacecraftArrive, this);
             sc.id = this._cosmos.flyers.push(sc) - 1;
+            sc.destSolarIdx = selSolarIdx;
             var scDisp = new so.Circle(8, cc.color.YELLOW);
             scDisp.setPosition(this._mapLayer.at(0, 0));
             this._mapLayer.addMapPoint(scDisp, 9999);
@@ -223,14 +225,15 @@ so.StartupScene = cc.Scene.extend({
             '[' + this._cosmos.flyers[id].name + '] reached its destination.',
             cc.color(255, 255, 96));
         this._flyerNodes[id].removeFromParent();
-        if (this._flyerNodes.length > 1) {
-            this._cosmos.flyers[id] = this._cosmos.flyers.pop();
-            this._cosmos.flyers[id].id = id;
+        var destSolarIdx = this._cosmos.flyers[id].destSolarIdx;
+        var slrDisp = this._solarNodes[destSolarIdx];
+        so.refreshTooltip(this._mapLayer, slrDisp,
+            slrDisp.getBLCorner(), slrDisp.getCircleSize(),
+            this._cosmos.solars[destSolarIdx].getTooltip());
+        // Remove the flyer node. The flyer object will be removed by the cosmos class.
+        if (this._flyerNodes.length > 1)
             this._flyerNodes[id] = this._flyerNodes.pop();
-        } else {
-            this._cosmos.flyers = [];
-            this._flyerNodes = [];
-        }
+        else this._flyerNodes = [];
     },
 
     _timeflowIdx: 1,    // timeflowRates[_timeflowIdx] is 1x
@@ -275,6 +278,10 @@ so.StartupScene = cc.Scene.extend({
         for (var i in this._cosmos.solars) {
             this._solarNodes[i].setVisible(
                 this._cosmos.solars[i].distToOrigSq <= lconeRad * lconeRad);
+            if (this._cosmos.solars[i].civil >= 0) {
+                this._solarNodes[i].glow.setColour(
+                    this._cosmos.civils[this._cosmos.solars[i].civil].colour);
+            }
         }
         var cygnia = this._cosmos.civils[0];
         var ss = (cygnia.resource + 0.00625).toString();

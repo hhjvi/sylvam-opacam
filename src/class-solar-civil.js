@@ -1,5 +1,6 @@
-so.SolarSystem = function (name, colour, x, y, radius, res) {
+so.SolarSystem = function (cosmos, name, colour, x, y, radius, res) {
     var r = {
+        cosmos: cosmos,
         name: name || 'Unnamed Solar System',
         colour: colour || cc.color(255, 64, 0),
         x: x || 0, y: y || 0, radius: radius || 10,
@@ -8,14 +9,30 @@ so.SolarSystem = function (name, colour, x, y, radius, res) {
     };
     // For calculating the player's light cone faster
     r.distToOrigSq = r.x * r.x + r.y * r.y;
+    r.getTooltip = so.SolarSystem.getTooltip;
     return r;
 };
 
-so.Civilization = function (name, badge) {
+so.SolarSystem.getTooltip = function () {
+    var args = [this.name, this.colour];
+    if (this.civil >= 0) {
+        args[2] = this.cosmos.civils[this.civil].name;
+        args[3] = this.cosmos.civils[this.civil].colour;
+        args[4] = this.cosmos.civils[this.civil].badge;
+        args[5] = cc.color.BLACK;
+    } else {
+        args[2] = 'Vacant, Res. ' + this.resource;
+        args[3] = cc.color.WHITE;
+    }
+    return new so.Tooltip(args);
+};
+
+so.Civilization = function (name, badge, colour) {
     var r = {
         name: name || 'Mysteria',
         badge: badge || 'Ordinary',
-        solar: -1,
+        solars: [],
+        colour: colour || cc.color(255, 0, 64),
         resource: 0,
         devPace: {}, devPaceTot: 0,
         devPoints: {},
