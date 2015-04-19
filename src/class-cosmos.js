@@ -28,7 +28,11 @@ so.Cosmos.tick = function () {
         if (this.solars[f.destSolarIdx].civil === -1) {
             this.solars[f.destSolarIdx].civil = f.civil;
             this.civils[f.civil].resource += this.solars[f.destSolarIdx].resource;
+            this.civils[f.civil].solars.push(f.destSolarIdx);
             this.solars[f.destSolarIdx].resource = 0;
+            var spccrfts = this.civils[f.civil].spacecrafts;
+            if (spccrfts.length === 1) this.civils[f.civil].spacecrafts = [];
+            else spccrfts[spccrfts.indexOf(f.destSolarIdx)] = spccrfts.pop();
         }
         f.callback.call(f.target, f.id);
         if (this.flyers.length === 1) this.flyers = [];
@@ -43,9 +47,13 @@ so.Cosmos.tick = function () {
         delete this.solars[m.destSolarIdx];
         if (targetCiv === -1) { // Do nothing. Just destroyed a solar system.
         } else if (this.civils[targetCiv].solars.length === 1) {
-            // Civilization destroyed!!
-            destroyedCiv = this.civils[targetCiv].name;
-            delete this.civils[targetCiv];
+            if (this.civils[targetCiv].spacecrafts.length === 0) {
+                // Civilization destroyed!!
+                destroyedCiv = this.civils[targetCiv].name;
+                delete this.civils[targetCiv];
+            } else {
+                this.civils[targetCiv].solars = [];
+            }
         } else for (var i in this.civils[targetCiv].solars)
             if (this.civils[targetCiv].solars[i] === m.destSolarIdx) {
                 this.civils[targetCiv].solars[i] = this.civils[targetCiv].solars.pop();
@@ -56,7 +64,7 @@ so.Cosmos.tick = function () {
         if (this.flyers.length === 1) this.flyers = [];
         else {
             this.flyers[m.id] = this.flyers.pop();
-            this.flyers[m.id].id = f.id;
+            this.flyers[m.id].id = m.id;
         }
     }
 };

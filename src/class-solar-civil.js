@@ -37,7 +37,8 @@ so.Civilization = function (name, badge, colour) {
         devPace: {}, devPaceTot: 0,
         devPoints: {},
         devLevels: {}, devLevelsTot: 0,
-        stability: 100
+        stability: 100,
+        spacecrafts: []
     };
 
     for (var i in dcpItems)
