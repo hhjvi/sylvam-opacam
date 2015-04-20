@@ -25,8 +25,6 @@ so.StartupScene = cc.Scene.extend({
 
         // Let's rock!!
         cc.director.getScheduler().scheduleCallbackForTarget(this, this.step, 0.5);
-        this.addChild(new so.Storyboard(so.stbdTitles_startup, so.stbdTexts_startup, 255), 99999999);
-        this.pause();
     },
     initControl: function () {
         var _parent = this;
@@ -231,6 +229,7 @@ so.StartupScene = cc.Scene.extend({
                 if (selSolarSys.civil === 0) {
                     this._selectedSrc = cc.pMult(p, 1 / so.ly2pix);
                     this._notificator.addNotification('Select your destination');
+                    this._cosmos.civils[0].resource -= 200;
                 }
                 return;
             }
@@ -246,6 +245,7 @@ so.StartupScene = cc.Scene.extend({
             this._flyerNodes[mp.id] = mpDisp;
             this._notificator.addNotification(
                 'Mass Point sent to ' + selSolarSys.name, cc.color(192, 0, 0));
+            this._cosmos.civils[0].resource -= 1000;
             this._selectedSrc = null; break;
         case 2: // 3->2 Dimension Decreaser
             if (!this._selectedSrc) {
@@ -265,6 +265,7 @@ so.StartupScene = cc.Scene.extend({
             this._mapLayer.addMapPoint(dcDisp, 9999);
             this._flyerNodes[dc.id] = dcDisp;
             this._notificator.addNotification('Dimension Decreaser sent', cc.color(64, 0, 192));
+            this._cosmos.civils[0].resource -= 3000;
             this._selectedSrc = null; break;
         }
         this._idxToLaunch = -1;
@@ -353,6 +354,7 @@ so.StartupScene = cc.Scene.extend({
             }
         }
         var cygnia = this._cosmos.civils[0];
+        if (!cygnia) this.gameOver('You lost all your planets and spacecrafts.');
         var ss = (cygnia.resource + 0.00625).toString();
         this._resDisp.setString('Res. ' + ss.substr(0, ss.lastIndexOf('.') + 2));
         ss = (cygnia.stability + 0.00625).toString();
@@ -361,6 +363,10 @@ so.StartupScene = cc.Scene.extend({
         else if (cygnia.stability >= 60) this._stbltDisp.setColor(cc.color.YELLOW);
         else if (cygnia.stability >= 40) this._stbltDisp.setColor(cc.color(255, 128, 0));
         else this._stbltDisp.setColor(cc.color.RED);
+        // Check whether the game is over.
+        if (cygnia.resource <= 0) this.gameOver('You ran out of resources.');
+        else if (cygnia.stability <= 0) this.gameOver('The stability is too low.');
+        else if (cygnia.devLevels[2] >= 7) this.gameOver('You win. The Cygnians escaped the Dark Forest again.\nCheers!');
         // Refresh level display in the panel
         this._devBar.setCapacity(so.balanceBase + cygnia.devLevelsTot);
         for (var i in dcpItems)
@@ -389,24 +395,22 @@ so.StartupScene = cc.Scene.extend({
         }
     },
     // Called every half second.
-    _lightConeStbdShown: false,
-    _basCtrlStbdStepCnt: 6,
-    _spacecraftStbd1: false,
-    _spacecraftStbd2: false,
     step: function () {
-        if (!this._lightConeStbdShown) {
-            this._lightConeStbdShown = true;
-            this.addChild(new so.Storyboard(so.stbdTitles_lightCones, so.stbdTexts_lightCones), 99999999);
-            this.pause();
-        } else if (--this._basCtrlStbdStepCnt === 0) {
-            this.addChild(new so.Storyboard(so.stbdTitles_basCtrl, so.stbdTexts_basCtrl), 99999999);
-            this.pause();
-        } else if (!this._spacecraftStbd1 && this._cosmos.civils[0].devLevels[2] >= 1) {
-            this._spacecraftStbd1 = true;
-            this.addChild(new so.Storyboard(so.stbdTitles_crft1, so.stbdTexts_crft1), 99999999);
-            this.pause();
-        }
         for (var i = 0; i < timeflowRates[this._timeflowIdx]; i++) this._cosmos.tick();
         this.refreshDisp();
+    },
+
+    gameOver: function (text) {
+        cc.director.getScheduler().unscheduleCallbackForTarget(this, this.step);
+        var l = new cc.LayerColor(cc.color(0, 0, 0, 216));
+        this.addChild(l);
+        var lbl = new cc.LabelTTF('Game Over\n' + text, 'Karla', 40);
+        lbl.setNormalizedPosition(cc.p(0.5, 0.6));
+        l.addChild(lbl);
+        cc.eventManager.addListener({
+            event: cc.EventListener.TOUCH_ONE_BY_ONE,
+            swallowTouches: true,
+            onTouchBegan: function () { return true; }
+        }, l);
     }
 });
