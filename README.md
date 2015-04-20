@@ -13,11 +13,11 @@ Soon the big universe shrinked and the big bang happened again, and there goes t
 The Cygnians were eager to see the new universe, so they pushed out some simple machines
 to the new universe and followed out.
 
-Sadly, when they turned back, they didn't see the entrance of their small universe
-- it's not visible under the slightly different physical laws.
+Sadly, when they turned back, they didn't see the entrance of their small universe -
+it's not visible under the slightly different physical laws.
 
-So they could only stay, and the attacks among civilizations continue
-- we call it the 'Dark Forest' state.
+So they could only stay, and the attacks among civilizations continue -
+we call it the 'Dark Forest' state.
 
 Controls
 ========
