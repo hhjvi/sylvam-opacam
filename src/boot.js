@@ -43,7 +43,7 @@ cc.game.onStart = function () {
     cc.view.adjustViewPort(true);
     cc.view.setDesignResolutionSize(640, 320, cc.ResolutionPolicy.SHOW_ALL);
     cc.view.resizeWithBrowserSize(true);
-    cc.director.setDisplayStats(true);
+    cc.director.setDisplayStats(false);
     so.size = cc.director.getVisibleSize();
     so.centre = cc.p(so.size.width * 0.5, so.size.height * 0.5);
     // Load resources and here we go!
