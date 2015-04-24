@@ -72,3 +72,10 @@ This becomes available at the basic science level of 5.
 It is a kind of thing that can pull 3-D spaces to 2-D ones.
 
 Everything it touches will be destroyed, so be careful when you use it.
+
+Hints on the Game
+=================
+
+If you're eager to see spaceships and the weapons, fast-forward (at most 60x faster - double-click the button for many times) until several stars are visible. Then **develop Basic Science** - soon you'll be able to launch many things.
+
+And the spaceships aren't that slow - try developing Basic Science to level 3 or 4 and then send one out.
