@@ -1,7 +1,9 @@
 Sylvam Opacam
 =============
 
-** Note: this is not completely finished and contains lots of minor bugs. **
+** Note: This is not completely finished and contains lots of minor bugs. Sorry for that. I'm a Junior Three student and I'm at school from Monday to Friday. Therefore I may not be able to fix those bugs in time. I'll try fixing some of them during weekends though. Thanks for understanding! :) **
+
+** Note: If you see a blackscreen after loading the page, refresh and there we go. I'll try fixing it soon. **
 
 The universe is not that peaceful. Different civilizations are always attacking each other,
 for they never know whether each other is friendly.
@@ -24,7 +26,7 @@ Controls
 
 * Drag & drop the map to move around. Zoom in/out buttons are on the top-left corner.
 
-* The time control button is in the bottom-left corner. Click to pause, double-click to fast-forward.
+* The time control button is in the bottom-left corner. Click to pause, double-click to fast-forward. Double-click twice to get faster.
 
 * The development control is on the bottom (those circles). Click to adjust Cygnia's development paces.
 
